@@ -7,8 +7,10 @@
         <item name="colorSecondary">@color/black</item>
         <item name="colorSecondaryVariant">@color/black</item>
         <item name="colorOnSecondary">@color/white</item>
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="colorAccent">@color/white</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/background</item>
     </style>
+
 
     <style name="SplashScreenTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:textColor">@color/red</item>
