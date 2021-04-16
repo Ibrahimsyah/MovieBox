@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 import com.zairussalamdev.moviebox.R
+import com.zairussalamdev.moviebox.ui.main.MainActivity
 
 class SplashScreenActivity : AppCompatActivity() {
     companion object {
