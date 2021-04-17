@@ -29,4 +29,19 @@ class DetailViewModel(private val repository: TMDBRepository) : ViewModel() {
         }
         return result
     }
+
+    fun getTvShowDetail(id: Int): LiveData<DetailEntity> {
+        val result = MutableLiveData<DetailEntity>()
+        viewModelScope.launch {
+            loading.postValue(true)
+            try {
+                val detail = repository.getTvShowDetail(id)
+                result.postValue(detail)
+            } catch (error: Exception) {
+                errorMessage.postValue(error.message)
+            }
+            loading.postValue(false)
+        }
+        return result
+    }
 }

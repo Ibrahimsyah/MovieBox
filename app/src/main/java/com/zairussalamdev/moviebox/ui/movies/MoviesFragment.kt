@@ -11,14 +11,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.zairussalamdev.moviebox.databinding.FragmentMoviesBinding
 import com.zairussalamdev.moviebox.ui.adapter.MovieAdapter
 import com.zairussalamdev.moviebox.ui.detail.DetailActivity
+import com.zairussalamdev.moviebox.utils.MovieType
 import com.zairussalamdev.moviebox.utils.ViewModelFactory
 
 class MoviesFragment : Fragment() {
+    companion object {
+        const val MOVIE_TYPE = "MOVIE_TYPE"
+    }
+
     private lateinit var binding: FragmentMoviesBinding
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View {
         binding = FragmentMoviesBinding.inflate(inflater)
         return binding.root
@@ -27,11 +32,14 @@ class MoviesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val movieType = arguments?.getInt(MOVIE_TYPE)
         val factory = ViewModelFactory.getInstance()
         val movieViewModel = ViewModelProvider(this, factory).get(MovieViewModel::class.java)
+
         val adapter = MovieAdapter {
             val intent = Intent(context, DetailActivity::class.java)
             intent.putExtra(DetailActivity.MOVIE_ID, it.id)
+            intent.putExtra(DetailActivity.MOVIE_TYPE, movieType)
             startActivity(intent)
         }
 
@@ -41,7 +49,12 @@ class MoviesFragment : Fragment() {
             this.adapter = adapter
         }
 
-        movieViewModel.getMovieList().observe(viewLifecycleOwner, {
+        val data = movieViewModel.let {
+            if (movieType == MovieType.TYPE_MOVIE) it.getMovieList()
+            else it.getTvShowsList()
+        }
+
+        data.observe(viewLifecycleOwner, {
             adapter.setMovies(it)
         })
 
