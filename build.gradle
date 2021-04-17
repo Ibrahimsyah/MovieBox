@@ -30,4 +30,7 @@ ext{
     room_version = "2.2.6"
     retrofit_version = '2.9.0'
     dagger_version = '2.34.1'
+    mockito_version = '3.6.0'
+    androidCoreTestVersion = '2.1.0'
+    mockitoKotlinVersion = '2.2.0'
 }
