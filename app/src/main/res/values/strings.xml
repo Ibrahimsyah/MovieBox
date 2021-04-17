@@ -6,4 +6,14 @@
     <string name="movie_title">Movie Title</string>
     <string name="movie_overview">Movie Overwiew</string>
     <string name="rating_divider">/ 10</string>
+    <string name="movie_rating">%1$.2f/10</string>
+    <string name="movie_popularity">1000</string>
+    <string name="movie_rating_example">9.2/10</string>
+    <string name="rating_label">Rating</string>
+    <string name="popularity_label">popularity</string>
+    <string name="movie_tagline">Movie tagline</string>
+    <string name="overview_label">Overview</string>
+    <string name="status_label">Status</string>
+    <string name="movie_status">Status</string>
+    <string name="movie_homepage">homepage</string>
 </resources>
