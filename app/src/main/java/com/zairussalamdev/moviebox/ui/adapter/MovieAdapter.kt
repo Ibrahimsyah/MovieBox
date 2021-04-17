@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.zairussalamdev.moviebox.data.entities.MovieEntity
 import com.zairussalamdev.moviebox.databinding.ItemMovieBinding
+import com.zairussalamdev.moviebox.utils.ImageNetwork
 
 class MovieAdapter(private val listener: (movie: MovieEntity) -> Unit) :
     RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
@@ -23,7 +24,7 @@ class MovieAdapter(private val listener: (movie: MovieEntity) -> Unit) :
                 movieTitle.text = movie.title
                 movieOverview.text = movie.overview
                 movieRating.text = movie.voteAverage.toString()
-                moviePoster.load("https://image.tmdb.org/t/p/w500/${movie.posterPath}") {
+                moviePoster.load(ImageNetwork.getThumbnailUrl(movie.posterPath as String)) {
                     crossfade(true)
                 }
             }

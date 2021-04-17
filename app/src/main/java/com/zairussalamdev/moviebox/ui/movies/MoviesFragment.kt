@@ -1,16 +1,16 @@
 package com.zairussalamdev.moviebox.ui.movies
 
-import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.zairussalamdev.moviebox.databinding.FragmentMoviesBinding
 import com.zairussalamdev.moviebox.ui.adapter.MovieAdapter
+import com.zairussalamdev.moviebox.ui.detail.DetailActivity
 import com.zairussalamdev.moviebox.utils.ViewModelFactory
 
 class MoviesFragment : Fragment() {
@@ -27,10 +27,12 @@ class MoviesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val factory = ViewModelFactory.getInstance(context as Context)
+        val factory = ViewModelFactory.getInstance()
         val movieViewModel = ViewModelProvider(this, factory).get(MovieViewModel::class.java)
         val adapter = MovieAdapter {
-            Toast.makeText(context, it.title, Toast.LENGTH_SHORT).show()
+            val intent = Intent(context, DetailActivity::class.java)
+            intent.putExtra(DetailActivity.MOVIE_ID, it.id)
+            startActivity(intent)
         }
 
         with(binding.rvMovies) {
