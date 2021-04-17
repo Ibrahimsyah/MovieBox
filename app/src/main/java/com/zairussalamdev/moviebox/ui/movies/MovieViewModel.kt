@@ -32,4 +32,22 @@ class MovieViewModel(private val repository: TMDBRepository) : ViewModel() {
         }
         return result
     }
+
+    fun getTvShowsList(): LiveData<List<MovieEntity>> {
+        val result = MutableLiveData<List<MovieEntity>>()
+        viewModelScope.launch {
+            loading.postValue(true)
+            try {
+                val movies = repository.getTvShowsList()
+                if (movies.isEmpty()) {
+                    errorMessage.postValue("No Data Found")
+                }
+                result.postValue(movies)
+            } catch (error: Exception) {
+                errorMessage.postValue(error.message)
+            }
+            loading.postValue(false)
+        }
+        return result
+    }
 }

@@ -8,12 +8,14 @@ import coil.load
 import com.zairussalamdev.moviebox.R
 import com.zairussalamdev.moviebox.databinding.ActivityDetailBinding
 import com.zairussalamdev.moviebox.utils.ImageNetwork
+import com.zairussalamdev.moviebox.utils.MovieType
 import com.zairussalamdev.moviebox.utils.ViewModelFactory
 
 class DetailActivity : AppCompatActivity() {
 
     companion object {
         const val MOVIE_ID = "MOVIE_ID"
+        const val MOVIE_TYPE = "MOVIE_TYPE"
     }
 
     private lateinit var binding: ActivityDetailBinding
@@ -24,6 +26,7 @@ class DetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val movieId = intent.getIntExtra(MOVIE_ID, 0)
+        val movieType = intent.getIntExtra(MOVIE_TYPE, MovieType.TYPE_MOVIE)
         val factory = ViewModelFactory.getInstance()
         val detailViewModel = ViewModelProvider(this, factory).get(DetailViewModel::class.java)
 
@@ -42,7 +45,12 @@ class DetailActivity : AppCompatActivity() {
             }
         })
 
-        detailViewModel.getMovieDetail(movieId).observe(this, {
+        val data = detailViewModel.let {
+            if (movieType == MovieType.TYPE_MOVIE) it.getMovieDetail(movieId)
+            else it.getTvShowDetail(movieId)
+        }
+
+        data.observe(this, {
             val rating = resources.getString(R.string.movie_rating)
             with(binding) {
                 moviePoster.load(ImageNetwork.getFullSizeUrl(it.posterPath as String))

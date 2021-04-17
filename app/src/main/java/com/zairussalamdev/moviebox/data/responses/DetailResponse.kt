@@ -7,7 +7,7 @@ data class DetailResponse(
         @SerializedName("overview")
         val overview: String? = null,
 
-        @SerializedName("title")
+        @SerializedName("title", alternate = ["name"])
         val title: String? = null,
 
         @SerializedName("poster_path")
