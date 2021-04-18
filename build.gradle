@@ -27,7 +27,6 @@ task clean(type: Delete) {
 
 ext{
     coroutines_version = "1.4.3"
-    room_version = "2.2.6"
     retrofit_version = '2.9.0'
     dagger_version = '2.34.1'
     mockito_version = '3.6.0'
