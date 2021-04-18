@@ -1,15 +1,17 @@
 package com.zairussalamdev.moviebox.data
 
-import android.util.Log
 import com.zairussalamdev.moviebox.data.entities.DetailEntity
 import com.zairussalamdev.moviebox.data.entities.MovieEntity
 import com.zairussalamdev.moviebox.services.retrofit.TMDBService
+import com.zairussalamdev.moviebox.utils.IdlingResource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class TMDBRepository(private val apiService: TMDBService) {
     suspend fun getMovieList(): List<MovieEntity> {
+        IdlingResource.increment()
         val response = withContext(Dispatchers.IO) { apiService.getNowPlayingMovies() }
+        IdlingResource.decrement()
         val result = ArrayList<MovieEntity>()
         response.movies.forEach { movie ->
             result.add(
@@ -26,7 +28,9 @@ class TMDBRepository(private val apiService: TMDBService) {
     }
 
     suspend fun getTvShowsList(): List<MovieEntity> {
+        IdlingResource.increment()
         val response = withContext(Dispatchers.IO) { apiService.getPopularTvShows() }
+        IdlingResource.decrement()
         val result = ArrayList<MovieEntity>()
         response.tvShows.forEach { movie ->
             result.add(
@@ -43,7 +47,9 @@ class TMDBRepository(private val apiService: TMDBService) {
     }
 
     suspend fun getMovieDetail(id: Int): DetailEntity {
+        IdlingResource.increment()
         val response = withContext(Dispatchers.IO) { apiService.getMovieDetail(id) }
+        IdlingResource.decrement()
         return DetailEntity(
                 response.overview,
                 response.title,
@@ -58,8 +64,9 @@ class TMDBRepository(private val apiService: TMDBService) {
     }
 
     suspend fun getTvShowDetail(id: Int): DetailEntity {
-        Log.d("hehehe", "getTvShowDetail called")
+        IdlingResource.increment()
         val response = withContext(Dispatchers.IO) { apiService.getTvShowDetail(id) }
+        IdlingResource.decrement()
         return DetailEntity(
                 response.overview,
                 response.title,
