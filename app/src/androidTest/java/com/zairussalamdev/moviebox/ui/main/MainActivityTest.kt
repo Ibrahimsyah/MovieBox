@@ -19,6 +19,7 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4ClassRunner::class)
 class MainActivityTest {
+
     @Before
     fun setUp() {
         ActivityScenario.launch(MainActivity::class.java)
@@ -35,6 +36,7 @@ class MainActivityTest {
         onView(withId(R.id.rv_movies)).check(matches(isDisplayed()))
         onView(withId(R.id.error_message)).check(matches(not(isDisplayed())))
     }
+
 
     @Test
     fun movie_detail_loaded_successfully() {

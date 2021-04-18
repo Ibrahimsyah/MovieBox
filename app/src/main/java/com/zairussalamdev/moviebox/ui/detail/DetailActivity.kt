@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import com.zairussalamdev.moviebox.R
 import com.zairussalamdev.moviebox.databinding.ActivityDetailBinding
+import com.zairussalamdev.moviebox.ui.adapter.MovieGenreAdapter
 import com.zairussalamdev.moviebox.utils.ImageNetwork
 import com.zairussalamdev.moviebox.utils.MovieType
 import com.zairussalamdev.moviebox.utils.ViewModelFactory
@@ -29,6 +31,14 @@ class DetailActivity : AppCompatActivity() {
         val movieType = intent.getIntExtra(MOVIE_TYPE, MovieType.TYPE_MOVIE)
         val factory = ViewModelFactory.getInstance()
         val detailViewModel = ViewModelProvider(this, factory).get(DetailViewModel::class.java)
+        val genreAdapter = MovieGenreAdapter()
+
+        with(binding.rvMovieGenre) {
+            layoutManager =
+                LinearLayoutManager(this@DetailActivity, LinearLayoutManager.HORIZONTAL, false)
+            setHasFixedSize(true)
+            adapter = genreAdapter
+        }
 
         detailViewModel.getLoading().observe(this, {
             binding.progressBar.visibility = if (it) View.VISIBLE else View.GONE
@@ -61,6 +71,7 @@ class DetailActivity : AppCompatActivity() {
                 movieOverview.text = it.overview
                 movieStatus.text = it.status
                 movieHomepage.text = it.homepage
+                genreAdapter.setGenres(it.genres)
                 overviewLabel.visibility = View.VISIBLE
                 statusLabel.visibility = View.VISIBLE
                 homepageLabel.visibility = View.VISIBLE
