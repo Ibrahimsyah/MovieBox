@@ -15,7 +15,7 @@ class ViewPagerAdapter(activity: AppCompatActivity) : FragmentStateAdapter(activ
         val fragment = MoviesFragment()
         val type = when (position) {
             0 -> MovieType.TYPE_MOVIE
-            1 -> MovieType.TYPE_TVSHOWS
+            1 -> MovieType.TYPE_TV_SHOW
             else -> MovieType.TYPE_MOVIE
         }
         fragment.arguments = Bundle().apply {

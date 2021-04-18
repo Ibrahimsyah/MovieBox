@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zairussalamdev.moviebox.data.TMDBRepository
 import com.zairussalamdev.moviebox.data.entities.MovieEntity
+import com.zairussalamdev.moviebox.utils.ErrorMessageHandler
 import kotlinx.coroutines.launch
 
 class MovieViewModel(private val repository: TMDBRepository) : ViewModel() {
@@ -26,7 +27,8 @@ class MovieViewModel(private val repository: TMDBRepository) : ViewModel() {
                 }
                 result.postValue(movies)
             } catch (error: Exception) {
-                errorMessage.postValue(error.message)
+                val message = ErrorMessageHandler.generateErrorMessage(error)
+                errorMessage.postValue(message)
             }
             loading.postValue(false)
         }
@@ -44,7 +46,8 @@ class MovieViewModel(private val repository: TMDBRepository) : ViewModel() {
                 }
                 result.postValue(movies)
             } catch (error: Exception) {
-                errorMessage.postValue(error.message)
+                val message = ErrorMessageHandler.generateErrorMessage(error)
+                errorMessage.postValue(message)
             }
             loading.postValue(false)
         }
