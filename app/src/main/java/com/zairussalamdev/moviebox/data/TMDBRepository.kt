@@ -50,16 +50,18 @@ class TMDBRepository(private val apiService: TMDBService) {
         IdlingResource.increment()
         val response = withContext(Dispatchers.IO) { apiService.getMovieDetail(id) }
         IdlingResource.decrement()
+        val genres = response.genres.map { genre -> genre.name }
         return DetailEntity(
-                response.overview,
-                response.title,
-                response.posterPath,
-                response.voteAverage,
-                response.popularity,
-                response.tagLine,
-                response.id,
-                response.homepage,
-                response.status
+            response.overview,
+            response.title,
+            response.posterPath,
+            response.voteAverage,
+            response.popularity,
+            response.tagLine,
+            genres = genres,
+            response.id,
+            response.homepage,
+            response.status
         )
     }
 
@@ -67,16 +69,18 @@ class TMDBRepository(private val apiService: TMDBService) {
         IdlingResource.increment()
         val response = withContext(Dispatchers.IO) { apiService.getTvShowDetail(id) }
         IdlingResource.decrement()
+        val genres = response.genres.map { genre -> genre.name }
         return DetailEntity(
-                response.overview,
-                response.title,
-                response.posterPath,
-                response.voteAverage,
-                response.popularity,
-                response.tagLine,
-                response.id,
-                response.homepage,
-                response.status
+            response.overview,
+            response.title,
+            response.posterPath,
+            response.voteAverage,
+            response.popularity,
+            response.tagLine,
+            genres = genres,
+            response.id,
+            response.homepage,
+            response.status
         )
     }
 }

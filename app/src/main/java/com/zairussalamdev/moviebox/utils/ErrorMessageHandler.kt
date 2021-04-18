@@ -8,7 +8,7 @@ object ErrorMessageHandler {
         return when (error) {
             is UnknownHostException -> "Network Error"
             is HttpException -> "HTTP ERROR"
-            else -> "Something is Error"
+            else -> error.message.toString()
         }
     }
 }
