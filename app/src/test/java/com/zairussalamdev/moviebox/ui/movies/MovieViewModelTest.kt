@@ -7,6 +7,7 @@ import com.zairussalamdev.moviebox.data.entities.MovieEntity
 import com.zairussalamdev.moviebox.utils.DummyData
 import com.zairussalamdev.moviebox.utils.TestCoroutineRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import okhttp3.ResponseBody
 import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Rule
@@ -16,6 +17,8 @@ import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
+import retrofit2.HttpException
+import retrofit2.Response
 
 @RunWith(MockitoJUnitRunner::class)
 @ExperimentalCoroutinesApi
@@ -33,16 +36,21 @@ class MovieViewModelTest {
     @Mock
     private lateinit var observer: Observer<List<MovieEntity>>
 
+    @Mock
+    private lateinit var errorObserver: Observer<String>
 
     private lateinit var movieViewModel: MovieViewModel
+    private lateinit var responseHttpError: HttpException
 
     @Before
     fun init() {
         movieViewModel = MovieViewModel(tmdbRepository)
+        val responseBody = Response.error<Error>(500, ResponseBody.create(null, "".toByteArray()))
+        responseHttpError = HttpException(responseBody)
     }
 
     @Test
-    fun getMovieList() {
+    fun `get movie list success`() {
         testCoroutineRule.runBlockingTest {
             val dummy = DummyData.getDummyListData()
             `when`(tmdbRepository.getMovieList()).thenReturn(dummy)
@@ -55,7 +63,34 @@ class MovieViewModelTest {
     }
 
     @Test
-    fun getTvShowsList() {
+    fun `get movie list with no data`() {
+        testCoroutineRule.runBlockingTest {
+            val expectedError = "No Data Found"
+            `when`(tmdbRepository.getMovieList()).thenReturn(listOf())
+            val movies = movieViewModel.getMovieList()
+            assertNotNull(movies)
+            verify(tmdbRepository).getMovieList()
+            movieViewModel.getErrorMessage().observeForever(errorObserver)
+            verify(errorObserver).onChanged(expectedError)
+        }
+    }
+
+    @Test
+    fun `get movie list with HTTP error`() {
+        testCoroutineRule.runBlockingTest {
+            val expectedError = "HTTP Error"
+            `when`(tmdbRepository.getMovieList()).thenThrow(responseHttpError)
+            val movies = movieViewModel.getMovieList()
+            assertNotNull(movies)
+            verify(tmdbRepository).getMovieList()
+            movieViewModel.getErrorMessage().observeForever(errorObserver)
+            verify(errorObserver).onChanged(expectedError)
+        }
+    }
+
+
+    @Test
+    fun `get TV Show list success`() {
         testCoroutineRule.runBlockingTest {
             val dummy = DummyData.getDummyListData()
             `when`(tmdbRepository.getTvShowsList()).thenReturn(dummy)
@@ -64,6 +99,32 @@ class MovieViewModelTest {
             verify(tmdbRepository).getTvShowsList()
             movieViewModel.getTvShowsList().observeForever(observer)
             verify(observer).onChanged(dummy)
+        }
+    }
+
+    @Test
+    fun `get TV Show list with no data`() {
+        testCoroutineRule.runBlockingTest {
+            val expectedError = "No Data Found"
+            `when`(tmdbRepository.getTvShowsList()).thenReturn(listOf())
+            val tvShows = movieViewModel.getTvShowsList()
+            assertNotNull(tvShows)
+            verify(tmdbRepository).getTvShowsList()
+            movieViewModel.getErrorMessage().observeForever(errorObserver)
+            verify(errorObserver).onChanged(expectedError)
+        }
+    }
+
+    @Test
+    fun `get TV Show list with HTTP error`() {
+        testCoroutineRule.runBlockingTest {
+            val expectedError = "HTTP Error"
+            `when`(tmdbRepository.getTvShowsList()).thenThrow(responseHttpError)
+            val movies = movieViewModel.getTvShowsList()
+            assertNotNull(movies)
+            verify(tmdbRepository).getTvShowsList()
+            movieViewModel.getErrorMessage().observeForever(errorObserver)
+            verify(errorObserver).onChanged(expectedError)
         }
     }
 }
