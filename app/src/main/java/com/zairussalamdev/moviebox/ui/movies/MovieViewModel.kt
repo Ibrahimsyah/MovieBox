@@ -8,8 +8,9 @@ import com.zairussalamdev.moviebox.data.TMDBRepository
 import com.zairussalamdev.moviebox.data.entities.MovieEntity
 import com.zairussalamdev.moviebox.utils.ErrorMessageHandler
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MovieViewModel(private val repository: TMDBRepository) : ViewModel() {
+class MovieViewModel @Inject constructor(private val repository: TMDBRepository) : ViewModel() {
     private val loading = MutableLiveData<Boolean>()
     private val errorMessage = MutableLiveData<String>()
 

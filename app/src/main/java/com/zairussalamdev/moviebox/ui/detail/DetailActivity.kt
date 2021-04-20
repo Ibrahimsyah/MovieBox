@@ -3,15 +3,15 @@ package com.zairussalamdev.moviebox.ui.detail
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
+import com.zairussalamdev.moviebox.App
 import com.zairussalamdev.moviebox.R
+import com.zairussalamdev.moviebox.configs.MovieType
 import com.zairussalamdev.moviebox.databinding.ActivityDetailBinding
 import com.zairussalamdev.moviebox.ui.adapter.MovieGenreAdapter
 import com.zairussalamdev.moviebox.utils.ImageNetwork
-import com.zairussalamdev.moviebox.utils.MovieType
-import com.zairussalamdev.moviebox.utils.ViewModelFactory
+import javax.inject.Inject
 
 class DetailActivity : AppCompatActivity() {
 
@@ -20,22 +20,28 @@ class DetailActivity : AppCompatActivity() {
         const val MOVIE_TYPE = "MOVIE_TYPE"
     }
 
+    @Inject
+    lateinit var detailViewModel: DetailViewModel
+
     private lateinit var binding: ActivityDetailBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        (applicationContext as App).appComponent.inject(this)
         super.onCreate(savedInstanceState)
+
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         val movieId = intent.getIntExtra(MOVIE_ID, 0)
         val movieType = intent.getIntExtra(MOVIE_TYPE, MovieType.TYPE_MOVIE)
-        val factory = ViewModelFactory.getInstance()
-        val detailViewModel = ViewModelProvider(this, factory).get(DetailViewModel::class.java)
         val genreAdapter = MovieGenreAdapter()
 
         with(binding.rvMovieGenre) {
-            layoutManager =
-                LinearLayoutManager(this@DetailActivity, LinearLayoutManager.HORIZONTAL, false)
+            layoutManager = LinearLayoutManager(
+                    this@DetailActivity,
+                    LinearLayoutManager.HORIZONTAL,
+                    false
+            )
             setHasFixedSize(true)
             adapter = genreAdapter
         }

@@ -6,8 +6,9 @@ import com.zairussalamdev.moviebox.services.retrofit.TMDBService
 import com.zairussalamdev.moviebox.utils.IdlingResource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class TMDBRepository(private val apiService: TMDBService) {
+class TMDBRepository @Inject constructor(private val apiService: TMDBService) {
     suspend fun getMovieList(): List<MovieEntity> {
         IdlingResource.increment()
         val response = withContext(Dispatchers.IO) { apiService.getNowPlayingMovies() }
