@@ -26,7 +26,7 @@ import retrofit2.Response
 class DetailViewModelTest {
 
     @get:Rule
-    var instantTaskExecutorRule = InstantTaskExecutorRule()
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     @get:Rule
     val testCoroutineRule = TestCoroutineRule()
