@@ -1,9 +1,9 @@
 package com.zairussalamdev.moviebox.services.retrofit
 
 import com.zairussalamdev.moviebox.BuildConfig
-import com.zairussalamdev.moviebox.data.responses.DetailResponse
-import com.zairussalamdev.moviebox.data.responses.MovieResponse
-import com.zairussalamdev.moviebox.data.responses.TvShowResponse
+import com.zairussalamdev.moviebox.data.remote.responses.DetailResponse
+import com.zairussalamdev.moviebox.data.remote.responses.MovieResponse
+import com.zairussalamdev.moviebox.data.remote.responses.TvShowResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
 

@@ -1,4 +1,4 @@
-package com.zairussalamdev.moviebox.data.responses
+package com.zairussalamdev.moviebox.data.remote.responses
 
 import com.google.gson.annotations.SerializedName
 
