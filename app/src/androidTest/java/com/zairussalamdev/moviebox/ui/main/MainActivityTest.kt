@@ -46,6 +46,13 @@ class MainActivityTest {
         )
         onView(withId(R.id.movie_poster)).check(matches(isDisplayed()))
         onView(withId(R.id.movie_title)).check(matches(isDisplayed()))
+        onView(withId(R.id.rv_movie_genre)).check(matches(isDisplayed()))
+        onView(withId(R.id.movie_popularity)).check(matches(isDisplayed()))
+        onView(withId(R.id.movie_rating)).check(matches(isDisplayed()))
+        onView(withId(R.id.movie_tagline)).check(matches(isDisplayed()))
+        onView(withId(R.id.movie_overview)).check(matches(isDisplayed()))
+        onView(withId(R.id.movie_status)).check(matches(isDisplayed()))
+        onView(withId(R.id.movie_homepage)).check(matches(isDisplayed()))
         onView(withId(R.id.error_message)).check(matches(not(isDisplayed())))
     }
 
@@ -65,6 +72,13 @@ class MainActivityTest {
         )
         onView(withId(R.id.movie_poster)).check(matches(isDisplayed()))
         onView(withId(R.id.movie_title)).check(matches(isDisplayed()))
+        onView(withId(R.id.rv_movie_genre)).check(matches(isDisplayed()))
+        onView(withId(R.id.movie_popularity)).check(matches(isDisplayed()))
+        onView(withId(R.id.movie_rating)).check(matches(isDisplayed()))
+        onView(withId(R.id.movie_tagline)).check(matches(isDisplayed()))
+        onView(withId(R.id.movie_overview)).check(matches(isDisplayed()))
+        onView(withId(R.id.movie_status)).check(matches(isDisplayed()))
+        onView(withId(R.id.movie_homepage)).check(matches(isDisplayed()))
         onView(withId(R.id.error_message)).check(matches(not(isDisplayed())))
     }
 }
