@@ -1,7 +1,7 @@
 package com.zairussalamdev.moviebox.utils
 
-import com.zairussalamdev.moviebox.data.entities.DetailEntity
-import com.zairussalamdev.moviebox.data.entities.MovieEntity
+import com.zairussalamdev.moviebox.data.local.entities.DetailEntity
+import com.zairussalamdev.moviebox.data.local.entities.MovieEntity
 import com.zairussalamdev.moviebox.data.remote.responses.*
 
 object DummyData {

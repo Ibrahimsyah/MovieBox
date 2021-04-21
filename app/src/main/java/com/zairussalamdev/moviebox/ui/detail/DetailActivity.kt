@@ -2,12 +2,13 @@ package com.zairussalamdev.moviebox.ui.detail
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import com.zairussalamdev.moviebox.App
 import com.zairussalamdev.moviebox.R
-import com.zairussalamdev.moviebox.configs.MovieType
+import com.zairussalamdev.moviebox.configs.Constants
 import com.zairussalamdev.moviebox.databinding.ActivityDetailBinding
 import com.zairussalamdev.moviebox.ui.adapter.MovieGenreAdapter
 import com.zairussalamdev.moviebox.utils.ImageNetwork
@@ -33,8 +34,9 @@ class DetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val movieId = intent.getIntExtra(MOVIE_ID, 0)
-        val movieType = intent.getIntExtra(MOVIE_TYPE, MovieType.TYPE_MOVIE)
+        val movieType = intent.getIntExtra(MOVIE_TYPE, Constants.TYPE_MOVIE)
         val genreAdapter = MovieGenreAdapter()
+        var isMovieFavorite = false
 
         with(binding.rvMovieGenre) {
             layoutManager = LinearLayoutManager(
@@ -62,7 +64,7 @@ class DetailActivity : AppCompatActivity() {
         })
 
         val data = detailViewModel.let {
-            if (movieType == MovieType.TYPE_MOVIE) it.getMovieDetail(movieId)
+            if (movieType == Constants.TYPE_MOVIE) it.getMovieDetail(movieId)
             else it.getTvShowDetail(movieId)
         }
 
@@ -85,5 +87,21 @@ class DetailActivity : AppCompatActivity() {
                 ratingLabel.visibility = View.VISIBLE
             }
         })
+
+        detailViewModel.checkIsMovieFavorite(movieId).observe(this, {
+            isMovieFavorite = it
+            val icon = if (it) R.drawable.ic_favorite_active else R.drawable.ic_favorite
+            binding.fab.setImageResource(icon)
+        })
+
+        binding.fab.setOnClickListener {
+            if (isMovieFavorite) {
+                detailViewModel.deleteMovieFromFavorite()
+                Toast.makeText(this, "Removed from Favorite", Toast.LENGTH_SHORT).show()
+            } else {
+                detailViewModel.addMovieToFavorite()
+                Toast.makeText(this, "Added to Favorite", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }

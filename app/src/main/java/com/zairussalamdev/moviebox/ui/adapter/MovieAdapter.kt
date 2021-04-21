@@ -4,12 +4,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.zairussalamdev.moviebox.data.entities.MovieEntity
+import com.zairussalamdev.moviebox.data.local.entities.MovieEntity
 import com.zairussalamdev.moviebox.databinding.ItemMovieBinding
 import com.zairussalamdev.moviebox.utils.ImageNetwork
 
 class MovieAdapter(private val listener: (movie: MovieEntity) -> Unit) :
     RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
+
     private var movies = listOf<MovieEntity>()
 
     fun setMovies(movies: List<MovieEntity>) {

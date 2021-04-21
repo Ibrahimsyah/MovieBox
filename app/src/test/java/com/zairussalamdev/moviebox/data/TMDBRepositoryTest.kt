@@ -2,6 +2,7 @@ package com.zairussalamdev.moviebox.data
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.verify
+import com.zairussalamdev.moviebox.data.local.LocalDataSource
 import com.zairussalamdev.moviebox.data.remote.RemoteDataSource
 import com.zairussalamdev.moviebox.utils.DummyData
 import com.zairussalamdev.moviebox.utils.TestCoroutineRule
@@ -28,11 +29,14 @@ class TMDBRepositoryTest {
     @Mock
     private lateinit var remoteDataSource: RemoteDataSource
 
+    @Mock
+    private lateinit var localDataSource: LocalDataSource
+
     private lateinit var tmdbRepository: TMDBRepository
 
     @Before
     fun init() {
-        tmdbRepository = TMDBRepository(remoteDataSource)
+        tmdbRepository = TMDBRepository(remoteDataSource, localDataSource)
     }
 
     @Test

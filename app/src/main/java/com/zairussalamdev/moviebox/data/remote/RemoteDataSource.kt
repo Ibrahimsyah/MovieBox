@@ -3,7 +3,7 @@ package com.zairussalamdev.moviebox.data.remote
 import com.zairussalamdev.moviebox.data.remote.responses.DetailResponse
 import com.zairussalamdev.moviebox.data.remote.responses.MovieResponse
 import com.zairussalamdev.moviebox.data.remote.responses.TvShowResponse
-import com.zairussalamdev.moviebox.services.retrofit.TMDBService
+import com.zairussalamdev.moviebox.services.TMDBService
 import com.zairussalamdev.moviebox.utils.IdlingResource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

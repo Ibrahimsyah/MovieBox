@@ -1,4 +1,4 @@
-package com.zairussalamdev.moviebox.data.entities
+package com.zairussalamdev.moviebox.data.local.entities
 
 data class DetailEntity(
     val overview: String? = null,
