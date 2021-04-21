@@ -3,7 +3,7 @@ package com.zairussalamdev.moviebox.ui.movies
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.zairussalamdev.moviebox.data.TMDBRepository
-import com.zairussalamdev.moviebox.data.entities.MovieEntity
+import com.zairussalamdev.moviebox.data.local.entities.MovieEntity
 import com.zairussalamdev.moviebox.utils.DummyData
 import com.zairussalamdev.moviebox.utils.TestCoroutineRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi

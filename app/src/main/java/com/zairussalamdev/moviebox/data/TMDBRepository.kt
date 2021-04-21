@@ -1,11 +1,16 @@
 package com.zairussalamdev.moviebox.data
 
-import com.zairussalamdev.moviebox.data.entities.DetailEntity
-import com.zairussalamdev.moviebox.data.entities.MovieEntity
+import androidx.lifecycle.LiveData
+import com.zairussalamdev.moviebox.data.local.LocalDataSource
+import com.zairussalamdev.moviebox.data.local.entities.DetailEntity
+import com.zairussalamdev.moviebox.data.local.entities.MovieEntity
 import com.zairussalamdev.moviebox.data.remote.RemoteDataSource
 import javax.inject.Inject
 
-class TMDBRepository @Inject constructor(private val remoteDataSource: RemoteDataSource) : MovieDataSource {
+class TMDBRepository @Inject constructor(
+        private val remoteDataSource: RemoteDataSource,
+        private val localDataSource: LocalDataSource
+) : MovieDataSource {
     override suspend fun getMovieList(): List<MovieEntity> {
         val response = remoteDataSource.getMovieList()
         val result = ArrayList<MovieEntity>()
@@ -73,4 +78,25 @@ class TMDBRepository @Inject constructor(private val remoteDataSource: RemoteDat
                 response.status
         )
     }
+
+    override fun getFavoriteMovies(): LiveData<List<MovieEntity>> {
+        return localDataSource.getFavoriteMovies()
+    }
+
+    override fun getFavoriteTvShows(): LiveData<List<MovieEntity>> {
+        return localDataSource.getFavoriteTvShows()
+    }
+
+    override fun checkMovieFavorite(id: Int): LiveData<Boolean> {
+        return localDataSource.checkMovieFavorite(id)
+    }
+
+    override suspend fun insertFavoriteMovie(movie: MovieEntity) {
+        return localDataSource.insertFavoriteMovie(movie)
+    }
+
+    override suspend fun deleteFavoriteMovie(movie: MovieEntity) {
+        return localDataSource.deleteFavoriteMovie(movie)
+    }
+
 }

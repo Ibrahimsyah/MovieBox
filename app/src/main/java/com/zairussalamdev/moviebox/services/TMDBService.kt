@@ -1,4 +1,4 @@
-package com.zairussalamdev.moviebox.services.retrofit
+package com.zairussalamdev.moviebox.services
 
 import com.zairussalamdev.moviebox.BuildConfig
 import com.zairussalamdev.moviebox.data.remote.responses.DetailResponse

@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.zairussalamdev.moviebox.App
-import com.zairussalamdev.moviebox.configs.MovieType
+import com.zairussalamdev.moviebox.configs.Constants
 import com.zairussalamdev.moviebox.databinding.FragmentMoviesBinding
 import com.zairussalamdev.moviebox.ui.adapter.MovieAdapter
 import com.zairussalamdev.moviebox.ui.detail.DetailActivity
@@ -57,7 +57,7 @@ class MovieFragment : Fragment() {
         }
 
         val data = movieViewModel.let {
-            if (movieType == MovieType.TYPE_MOVIE) it.getMovieList()
+            if (movieType == Constants.TYPE_MOVIE) it.getMovieList()
             else it.getTvShowsList()
         }
 
