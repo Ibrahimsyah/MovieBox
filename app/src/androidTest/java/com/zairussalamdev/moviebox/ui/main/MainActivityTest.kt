@@ -5,6 +5,7 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.swipeUp
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
@@ -51,8 +52,10 @@ class MainActivityTest {
         onView(withId(R.id.movie_rating)).check(matches(isDisplayed()))
         onView(withId(R.id.movie_tagline)).check(matches(isDisplayed()))
         onView(withId(R.id.movie_overview)).check(matches(isDisplayed()))
+        onView(withId(R.id.movie_poster)).perform(swipeUp())
         onView(withId(R.id.movie_status)).check(matches(isDisplayed()))
         onView(withId(R.id.movie_homepage)).check(matches(isDisplayed()))
+        onView(withId(R.id.movie_overview)).perform(swipeUp())
         onView(withId(R.id.error_message)).check(matches(not(isDisplayed())))
     }
 
@@ -77,8 +80,10 @@ class MainActivityTest {
         onView(withId(R.id.movie_rating)).check(matches(isDisplayed()))
         onView(withId(R.id.movie_tagline)).check(matches(isDisplayed()))
         onView(withId(R.id.movie_overview)).check(matches(isDisplayed()))
+        onView(withId(R.id.movie_poster)).perform(swipeUp())
         onView(withId(R.id.movie_status)).check(matches(isDisplayed()))
         onView(withId(R.id.movie_homepage)).check(matches(isDisplayed()))
+        onView(withId(R.id.movie_overview)).perform(swipeUp())
         onView(withId(R.id.error_message)).check(matches(not(isDisplayed())))
     }
 }
