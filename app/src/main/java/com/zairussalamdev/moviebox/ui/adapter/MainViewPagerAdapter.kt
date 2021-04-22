@@ -7,7 +7,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.zairussalamdev.moviebox.configs.Constants
 import com.zairussalamdev.moviebox.ui.movies.MovieFragment
 
-class ViewPagerAdapter(activity: AppCompatActivity) : FragmentStateAdapter(activity) {
+class MainViewPagerAdapter(activity: AppCompatActivity) : FragmentStateAdapter(activity) {
 
     override fun getItemCount(): Int = 2
 

@@ -9,6 +9,8 @@ import coil.load
 import com.zairussalamdev.moviebox.App
 import com.zairussalamdev.moviebox.R
 import com.zairussalamdev.moviebox.configs.Constants
+import com.zairussalamdev.moviebox.data.local.entities.DetailEntity
+import com.zairussalamdev.moviebox.data.local.entities.MovieEntity
 import com.zairussalamdev.moviebox.databinding.ActivityDetailBinding
 import com.zairussalamdev.moviebox.ui.adapter.MovieGenreAdapter
 import com.zairussalamdev.moviebox.utils.ImageNetwork
@@ -25,6 +27,7 @@ class DetailActivity : AppCompatActivity() {
     lateinit var detailViewModel: DetailViewModel
 
     private lateinit var binding: ActivityDetailBinding
+    private lateinit var detailEntity: DetailEntity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         (applicationContext as App).appComponent.inject(this)
@@ -69,6 +72,7 @@ class DetailActivity : AppCompatActivity() {
         }
 
         data.observe(this, {
+            detailEntity = it
             val rating = resources.getString(R.string.movie_rating)
             with(binding) {
                 moviePoster.load(ImageNetwork.getFullSizeUrl(it.posterPath as String))
@@ -95,13 +99,25 @@ class DetailActivity : AppCompatActivity() {
         })
 
         binding.fab.setOnClickListener {
+            val movie = mapDetailToMovie(detailEntity, movieType)
             if (isMovieFavorite) {
-                detailViewModel.deleteMovieFromFavorite()
+                detailViewModel.deleteMovieFromFavorite(movie)
                 Toast.makeText(this, "Removed from Favorite", Toast.LENGTH_SHORT).show()
             } else {
-                detailViewModel.addMovieToFavorite()
+                detailViewModel.addMovieToFavorite(movie)
                 Toast.makeText(this, "Added to Favorite", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun mapDetailToMovie(detailEntity: DetailEntity, movieType: Int): MovieEntity {
+        return MovieEntity(
+                detailEntity.id,
+                detailEntity.overview,
+                detailEntity.title,
+                detailEntity.posterPath,
+                detailEntity.voteAverage,
+                movieType
+        )
     }
 }

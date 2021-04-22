@@ -1,6 +1,8 @@
 package com.zairussalamdev.moviebox.data
 
 import androidx.lifecycle.LiveData
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import com.zairussalamdev.moviebox.data.local.LocalDataSource
 import com.zairussalamdev.moviebox.data.local.entities.DetailEntity
 import com.zairussalamdev.moviebox.data.local.entities.MovieEntity
@@ -79,12 +81,22 @@ class TMDBRepository @Inject constructor(
         )
     }
 
-    override fun getFavoriteMovies(): LiveData<List<MovieEntity>> {
-        return localDataSource.getFavoriteMovies()
+    override fun getFavoriteMovies(): LiveData<PagedList<MovieEntity>> {
+        val config = PagedList.Config.Builder()
+                .setEnablePlaceholders(false)
+                .setInitialLoadSizeHint(4)
+                .setPageSize(4)
+                .build()
+        return LivePagedListBuilder(localDataSource.getFavoriteMovies(), config).build()
     }
 
-    override fun getFavoriteTvShows(): LiveData<List<MovieEntity>> {
-        return localDataSource.getFavoriteTvShows()
+    override fun getFavoriteTvShows(): LiveData<PagedList<MovieEntity>> {
+        val config = PagedList.Config.Builder()
+                .setEnablePlaceholders(false)
+                .setInitialLoadSizeHint(4)
+                .setPageSize(4)
+                .build()
+        return LivePagedListBuilder(localDataSource.getFavoriteTvShows(), config).build()
     }
 
     override fun checkMovieFavorite(id: Int): LiveData<Boolean> {
@@ -92,11 +104,11 @@ class TMDBRepository @Inject constructor(
     }
 
     override suspend fun insertFavoriteMovie(movie: MovieEntity) {
-        return localDataSource.insertFavoriteMovie(movie)
+        localDataSource.insertFavoriteMovie(movie)
     }
 
     override suspend fun deleteFavoriteMovie(movie: MovieEntity) {
-        return localDataSource.deleteFavoriteMovie(movie)
+        localDataSource.deleteFavoriteMovie(movie)
     }
 
 }

@@ -9,9 +9,7 @@ import com.zairussalamdev.moviebox.data.TMDBRepository
 import com.zairussalamdev.moviebox.data.local.entities.DetailEntity
 import com.zairussalamdev.moviebox.data.local.entities.MovieEntity
 import com.zairussalamdev.moviebox.utils.ErrorMessageHandler
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class DetailViewModel @Inject constructor(private val repository: TMDBRepository) : ViewModel() {
@@ -59,32 +57,15 @@ class DetailViewModel @Inject constructor(private val repository: TMDBRepository
         return repository.checkMovieFavorite(id)
     }
 
-    fun addMovieToFavorite() {
-        detailEntity.value?.let {
-            viewModelScope.launch {
-                val movie = withContext(Dispatchers.Default) { mapDetailToMovie(it, movieType) }
-                repository.insertFavoriteMovie(movie)
-            }
+    fun addMovieToFavorite(movieEntity: MovieEntity) {
+        viewModelScope.launch {
+            repository.insertFavoriteMovie(movieEntity)
         }
     }
 
-    fun deleteMovieFromFavorite() {
-        detailEntity.value?.let {
-            viewModelScope.launch {
-                val movie = withContext(Dispatchers.Default) { mapDetailToMovie(it, movieType) }
-                repository.deleteFavoriteMovie(movie)
-            }
+    fun deleteMovieFromFavorite(movieEntity: MovieEntity) {
+        viewModelScope.launch {
+            repository.deleteFavoriteMovie(movieEntity)
         }
-    }
-
-    private fun mapDetailToMovie(detailEntity: DetailEntity, movieType: Int): MovieEntity {
-        return MovieEntity(
-                detailEntity.id,
-                detailEntity.overview,
-                detailEntity.title,
-                detailEntity.posterPath,
-                detailEntity.voteAverage,
-                movieType
-        )
     }
 }
