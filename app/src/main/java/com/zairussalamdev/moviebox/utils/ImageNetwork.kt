@@ -1,7 +1,9 @@
 package com.zairussalamdev.moviebox.utils
 
-object ImageNetwork {
-    fun getThumbnailUrl(path: String): String = "https://image.tmdb.org/t/p/w300/$path"
+import com.zairussalamdev.moviebox.configs.Constants
 
-    fun getFullSizeUrl(path: String): String = "https://image.tmdb.org/t/p/w500/$path"
+object ImageNetwork {
+    fun getThumbnailUrl(path: String): String = "${Constants.THUMBNAIL_IMAGE_URL}$path"
+
+    fun getFullSizeUrl(path: String): String = "${Constants.FULL_SIZE_IMAGE_URL}$path"
 }
