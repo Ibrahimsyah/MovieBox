@@ -34,7 +34,7 @@ class MovieViewModelTest {
     private lateinit var tmdbRepository: TMDBRepository
 
     @Mock
-    private lateinit var observer: Observer<List<MovieEntity>>
+    private lateinit var listObserver: Observer<List<MovieEntity>>
 
     @Mock
     private lateinit var errorObserver: Observer<String>
@@ -52,13 +52,13 @@ class MovieViewModelTest {
     @Test
     fun `get movie list success`() {
         testCoroutineRule.runBlockingTest {
-            val dummy = DummyData.getDummyListData()
-            `when`(tmdbRepository.getMovieList()).thenReturn(dummy)
+            val dummyList = DummyData.getDummyListData()
+            `when`(tmdbRepository.getMovieList()).thenReturn(dummyList)
             val movies = tmdbRepository.getMovieList()
             assertNotNull(movies)
             verify(tmdbRepository).getMovieList()
-            movieViewModel.getMovieList().observeForever(observer)
-            verify(observer).onChanged(dummy)
+            movieViewModel.getMovieList().observeForever(listObserver)
+            verify(listObserver).onChanged(dummyList)
         }
     }
 
@@ -92,13 +92,13 @@ class MovieViewModelTest {
     @Test
     fun `get TV Show list success`() {
         testCoroutineRule.runBlockingTest {
-            val dummy = DummyData.getDummyListData()
-            `when`(tmdbRepository.getTvShowsList()).thenReturn(dummy)
+            val dummyList = DummyData.getDummyListData()
+            `when`(tmdbRepository.getTvShowsList()).thenReturn(dummyList)
             val tvShows = tmdbRepository.getTvShowsList()
             assertNotNull(tvShows)
             verify(tmdbRepository).getTvShowsList()
-            movieViewModel.getTvShowsList().observeForever(observer)
-            verify(observer).onChanged(dummy)
+            movieViewModel.getTvShowsList().observeForever(listObserver)
+            verify(listObserver).onChanged(dummyList)
         }
     }
 

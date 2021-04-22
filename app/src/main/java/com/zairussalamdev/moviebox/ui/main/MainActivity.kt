@@ -1,10 +1,15 @@
 package com.zairussalamdev.moviebox.ui.main
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.tabs.TabLayoutMediator
+import com.zairussalamdev.moviebox.R
 import com.zairussalamdev.moviebox.databinding.ActivityMainBinding
-import com.zairussalamdev.moviebox.ui.adapter.ViewPagerAdapter
+import com.zairussalamdev.moviebox.ui.adapter.MainViewPagerAdapter
+import com.zairussalamdev.moviebox.ui.favorite.FavoriteActivity
 
 class MainActivity : AppCompatActivity() {
     companion object {
@@ -20,7 +25,8 @@ class MainActivity : AppCompatActivity() {
 
         with(binding) {
             setSupportActionBar(toolbar)
-            val adapter = ViewPagerAdapter(this@MainActivity)
+            supportActionBar?.setDisplayShowTitleEnabled(false)
+            val adapter = MainViewPagerAdapter(this@MainActivity)
             viewPager.adapter = adapter
             TabLayoutMediator(tabs, viewPager) { tab, position ->
                 tab.text = TAB_TITLES[position]
@@ -28,4 +34,18 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_manu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_favorite -> {
+                val intent = Intent(this, FavoriteActivity::class.java)
+                startActivity(intent)
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 }

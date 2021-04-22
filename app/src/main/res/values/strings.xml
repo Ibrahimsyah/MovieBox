@@ -15,4 +15,5 @@
     <string name="movie_status">Status</string>
     <string name="movie_homepage">homepage</string>
     <string name="add_to_favorite">Add to Favorite</string>
+    <string name="favorite">Favorite</string>
 </resources>
