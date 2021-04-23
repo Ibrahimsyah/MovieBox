@@ -4,8 +4,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
-import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
@@ -17,7 +16,6 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-
 
 @RunWith(AndroidJUnit4ClassRunner::class)
 class MainActivityTest {
@@ -96,7 +94,7 @@ class MainActivityTest {
                 RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())
         )
         onView(withId(R.id.fab)).perform(click())
-        onView(isRoot()).perform(ViewActions.pressBack())
+        onView(isRoot()).perform(pressBack())
         onView(withId(R.id.menu_favorite)).perform(click())
         onView(withId(R.id.error_message)).apply {
             check(matches(not(isDisplayed())))
@@ -105,7 +103,7 @@ class MainActivityTest {
                 RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())
         )
         onView(withId(R.id.fab)).perform(click())
-        onView(isRoot()).perform(ViewActions.pressBack())
+        onView(isRoot()).perform(pressBack())
         onView(withId(R.id.error_message)).apply {
             check(matches(isDisplayed()))
             check(matches(withText(expectedErrorMessage)))
@@ -120,7 +118,7 @@ class MainActivityTest {
                 RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())
         )
         onView(withId(R.id.fab)).perform(click())
-        onView(isRoot()).perform(ViewActions.pressBack())
+        onView(isRoot()).perform(pressBack())
         onView(withId(R.id.menu_favorite)).perform(click())
         onView(withText("TV SHOWS")).perform(click())
         onView(withId(R.id.error_message)).apply {
@@ -130,7 +128,7 @@ class MainActivityTest {
                 RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())
         )
         onView(withId(R.id.fab)).perform(click())
-        onView(isRoot()).perform(ViewActions.pressBack())
+        onView(isRoot()).perform(pressBack())
         onView(withId(R.id.error_message)).apply {
             check(matches(isDisplayed()))
             check(matches(withText(expectedErrorMessage)))
@@ -143,7 +141,7 @@ class MainActivityTest {
                 RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())
         )
         onView(withId(R.id.fab)).perform(click())
-        onView(isRoot()).perform(ViewActions.pressBack())
+        onView(isRoot()).perform(pressBack())
         onView(withId(R.id.menu_favorite)).perform(click())
         onView(withId(R.id.rv_movies)).perform(
                 RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())
@@ -158,7 +156,7 @@ class MainActivityTest {
                 RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())
         )
         onView(withId(R.id.fab)).perform(click())
-        onView(isRoot()).perform(ViewActions.pressBack())
+        onView(isRoot()).perform(pressBack())
         onView(withId(R.id.menu_favorite)).perform(click())
         onView(withText("TV SHOWS")).perform(click())
         onView(withId(R.id.rv_movies)).perform(
@@ -175,8 +173,10 @@ class MainActivityTest {
         onView(withId(R.id.movie_rating)).check(matches(isDisplayed()))
         onView(withId(R.id.movie_tagline)).check(matches(isDisplayed()))
         onView(withId(R.id.movie_overview)).check(matches(isDisplayed()))
+        onView(withId(R.id.movie_poster)).perform(swipeUp())
         onView(withId(R.id.movie_status)).check(matches(isDisplayed()))
         onView(withId(R.id.movie_homepage)).check(matches(isDisplayed()))
+        onView(withId(R.id.movie_overview)).perform(swipeUp())
         onView(withId(R.id.error_message)).check(matches(not(isDisplayed())))
     }
 }
