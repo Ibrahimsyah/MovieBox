@@ -4,7 +4,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
-import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
@@ -44,16 +44,7 @@ class MainActivityTest {
         onView(withId(R.id.rv_movies)).perform(
                 RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())
         )
-        onView(withId(R.id.movie_poster)).check(matches(isDisplayed()))
-        onView(withId(R.id.movie_title)).check(matches(isDisplayed()))
-        onView(withId(R.id.rv_movie_genre)).check(matches(isDisplayed()))
-        onView(withId(R.id.movie_popularity)).check(matches(isDisplayed()))
-        onView(withId(R.id.movie_rating)).check(matches(isDisplayed()))
-        onView(withId(R.id.movie_tagline)).check(matches(isDisplayed()))
-        onView(withId(R.id.movie_overview)).check(matches(isDisplayed()))
-        onView(withId(R.id.movie_status)).check(matches(isDisplayed()))
-        onView(withId(R.id.movie_homepage)).check(matches(isDisplayed()))
-        onView(withId(R.id.error_message)).check(matches(not(isDisplayed())))
+        check_detail_components()
     }
 
     @Test
@@ -66,10 +57,115 @@ class MainActivityTest {
     @Test
     fun tv_show_detail_loaded_successfully() {
         onView(withText("TV SHOWS")).perform(click())
-        onView(withId(R.id.rv_movies)).check(matches(isDisplayed()))
+        onView(withId(R.id.rv_movies)).apply {
+            check(matches(isDisplayed()))
+            perform(
+                    RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())
+            )
+        }
+        check_detail_components()
+    }
+
+    @Test
+    fun favorite_movies_empty_list() {
+        val expectedErrorMessage = "No Data"
+        onView(withId(R.id.menu_favorite)).perform(click())
+        onView(withId(R.id.error_message)).apply {
+            check(matches(isDisplayed()))
+            check(matches(withText(expectedErrorMessage)))
+        }
+    }
+
+    @Test
+    fun favorite_tv_shows_empty_list() {
+        val expectedErrorMessage = "No Data"
+        onView(withId(R.id.menu_favorite)).perform(click())
+        onView(withText("TV SHOWS")).perform(click())
+        onView(withId(R.id.error_message)).apply {
+            check(matches(isDisplayed()))
+            check(matches(withText(expectedErrorMessage)))
+        }
+    }
+
+    @Test
+    fun add_favorite_movie_and_check_if_it_exists_in_favorite_list() {
+        val expectedErrorMessage = "No Data"
         onView(withId(R.id.rv_movies)).perform(
                 RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())
         )
+        onView(withId(R.id.fab)).perform(click())
+        onView(isRoot()).perform(pressBack())
+        onView(withId(R.id.menu_favorite)).perform(click())
+        onView(withId(R.id.error_message)).apply {
+            check(matches(not(isDisplayed())))
+        }
+        onView(withId(R.id.rv_movies)).perform(
+                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())
+        )
+        onView(withId(R.id.fab)).perform(click())
+        onView(isRoot()).perform(pressBack())
+        onView(withId(R.id.error_message)).apply {
+            check(matches(isDisplayed()))
+            check(matches(withText(expectedErrorMessage)))
+        }
+    }
+
+    @Test
+    fun add_favorite_tv_show_and_check_if_it_exists_in_favorite_list() {
+        val expectedErrorMessage = "No Data"
+        onView(withText("TV SHOWS")).perform(click())
+        onView(withId(R.id.rv_movies)).perform(
+                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())
+        )
+        onView(withId(R.id.fab)).perform(click())
+        onView(isRoot()).perform(pressBack())
+        onView(withId(R.id.menu_favorite)).perform(click())
+        onView(withText("TV SHOWS")).perform(click())
+        onView(withId(R.id.error_message)).apply {
+            check(matches(not(isDisplayed())))
+        }
+        onView(withId(R.id.rv_movies)).perform(
+                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())
+        )
+        onView(withId(R.id.fab)).perform(click())
+        onView(isRoot()).perform(pressBack())
+        onView(withId(R.id.error_message)).apply {
+            check(matches(isDisplayed()))
+            check(matches(withText(expectedErrorMessage)))
+        }
+    }
+
+    @Test
+    fun show_favorite_movie_detail() {
+        onView(withId(R.id.rv_movies)).perform(
+                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())
+        )
+        onView(withId(R.id.fab)).perform(click())
+        onView(isRoot()).perform(pressBack())
+        onView(withId(R.id.menu_favorite)).perform(click())
+        onView(withId(R.id.rv_movies)).perform(
+                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())
+        )
+        check_detail_components()
+    }
+
+    @Test
+    fun show_favorite_tv_show_detail() {
+        onView(withText("TV SHOWS")).perform(click())
+        onView(withId(R.id.rv_movies)).perform(
+                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())
+        )
+        onView(withId(R.id.fab)).perform(click())
+        onView(isRoot()).perform(pressBack())
+        onView(withId(R.id.menu_favorite)).perform(click())
+        onView(withText("TV SHOWS")).perform(click())
+        onView(withId(R.id.rv_movies)).perform(
+                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())
+        )
+        check_detail_components()
+    }
+
+    private fun check_detail_components() {
         onView(withId(R.id.movie_poster)).check(matches(isDisplayed()))
         onView(withId(R.id.movie_title)).check(matches(isDisplayed()))
         onView(withId(R.id.rv_movie_genre)).check(matches(isDisplayed()))
@@ -77,8 +173,10 @@ class MainActivityTest {
         onView(withId(R.id.movie_rating)).check(matches(isDisplayed()))
         onView(withId(R.id.movie_tagline)).check(matches(isDisplayed()))
         onView(withId(R.id.movie_overview)).check(matches(isDisplayed()))
+        onView(withId(R.id.movie_poster)).perform(swipeUp())
         onView(withId(R.id.movie_status)).check(matches(isDisplayed()))
         onView(withId(R.id.movie_homepage)).check(matches(isDisplayed()))
+        onView(withId(R.id.movie_overview)).perform(swipeUp())
         onView(withId(R.id.error_message)).check(matches(not(isDisplayed())))
     }
 }
