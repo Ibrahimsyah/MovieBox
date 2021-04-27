@@ -6,9 +6,9 @@
     tools:context=".ui.movies.MovieFragment">
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_movies"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/rv_movies"
         tools:listitem="@layout/item_movie" />
 
     <ProgressBar

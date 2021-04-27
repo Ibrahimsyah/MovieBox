@@ -14,15 +14,15 @@ class MovieGenreAdapter : RecyclerView.Adapter<MovieGenreAdapter.GenreViewHolder
     }
 
     inner class GenreViewHolder(private val view: ItemGenreBinding) :
-        RecyclerView.ViewHolder(view.root) {
+            RecyclerView.ViewHolder(view.root) {
         fun bind(genre: String) {
             view.genre.text = genre
         }
     }
 
     override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
+            parent: ViewGroup,
+            viewType: Int
     ): MovieGenreAdapter.GenreViewHolder {
         val view = ItemGenreBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return GenreViewHolder(view)
