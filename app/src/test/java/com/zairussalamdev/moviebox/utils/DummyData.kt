@@ -17,13 +17,13 @@ object DummyData {
                 )
         )
         result.add(
-            MovieEntity(
-                overview = "overview2",
-                title = "name2",
-                posterPath = "poster2",
-                voteAverage = 5.0,
-                id = 2,
-            ),
+                MovieEntity(
+                        overview = "overview2",
+                        title = "name2",
+                        posterPath = "poster2",
+                        voteAverage = 5.0,
+                        id = 2,
+                ),
         )
         return result
     }

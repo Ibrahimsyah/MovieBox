@@ -9,7 +9,7 @@ import com.zairussalamdev.moviebox.databinding.ItemMovieBinding
 import com.zairussalamdev.moviebox.utils.ImageNetwork
 
 class MovieAdapter(private val listener: (movie: MovieEntity) -> Unit) :
-    RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
+        RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
 
     private var movies = listOf<MovieEntity>()
 
@@ -19,7 +19,7 @@ class MovieAdapter(private val listener: (movie: MovieEntity) -> Unit) :
     }
 
     inner class MovieViewHolder(private val view: ItemMovieBinding) :
-        RecyclerView.ViewHolder(view.root) {
+            RecyclerView.ViewHolder(view.root) {
         fun bind(movie: MovieEntity) {
             with(view) {
                 movieTitle.text = movie.title
@@ -34,13 +34,13 @@ class MovieAdapter(private val listener: (movie: MovieEntity) -> Unit) :
     }
 
     override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
+            parent: ViewGroup,
+            viewType: Int
     ): MovieAdapter.MovieViewHolder {
         val view = ItemMovieBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
+                LayoutInflater.from(parent.context),
+                parent,
+                false
         )
         return MovieViewHolder(view)
     }
