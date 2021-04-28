@@ -12,10 +12,10 @@ import com.zairussalamdev.moviebox.data.local.entities.MovieEntity
 @Dao
 interface MovieDao {
     @Query("select * from movies where movieType = ${Constants.TYPE_MOVIE}")
-    fun getFavoriteMovies(): DataSource.Factory<Int, MovieEntity>
+    fun getMovies(): DataSource.Factory<Int, MovieEntity>
 
     @Query("select * from movies where movieType = ${Constants.TYPE_TV_SHOW}")
-    fun getFavoriteTvShows(): DataSource.Factory<Int, MovieEntity>
+    fun getTvShows(): DataSource.Factory<Int, MovieEntity>
 
     @Insert
     fun insert(movie: MovieEntity)
@@ -23,6 +23,6 @@ interface MovieDao {
     @Delete
     fun delete(movie: MovieEntity)
 
-    @Query("select count(*) != 0 from movies where id = :id")
+    @Query("select isFavorite == 1 from movies where id = :id")
     fun checkMovieFavorite(id: Int): LiveData<Boolean>
 }

@@ -9,19 +9,19 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class LocalDataSource @Inject constructor(private val movieDao: MovieDao) {
-    fun getFavoriteMovies(): DataSource.Factory<Int, MovieEntity> {
-        return movieDao.getFavoriteMovies()
+    fun getMovies(): DataSource.Factory<Int, MovieEntity> {
+        return movieDao.getMovies()
     }
 
-    fun getFavoriteTvShows(): DataSource.Factory<Int, MovieEntity> {
-        return movieDao.getFavoriteTvShows()
+    fun getTvShows(): DataSource.Factory<Int, MovieEntity> {
+        return movieDao.getTvShows()
     }
 
     fun checkMovieFavorite(id: Int): LiveData<Boolean> {
         return movieDao.checkMovieFavorite(id)
     }
 
-    suspend fun insertFavoriteMovie(movieEntity: MovieEntity) {
+    suspend fun insertMovie(movieEntity: MovieEntity) {
         withContext(Dispatchers.IO) { movieDao.insert(movieEntity) }
     }
 
