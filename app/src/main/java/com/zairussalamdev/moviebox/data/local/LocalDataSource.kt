@@ -9,6 +9,10 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class LocalDataSource @Inject constructor(private val movieDao: MovieDao) {
+    suspend fun insertMovie(movie: MovieEntity) {
+        withContext(Dispatchers.IO) { movieDao.insert(movie) }
+    }
+
     fun getMovies(): DataSource.Factory<Int, MovieEntity> {
         return movieDao.getMovies()
     }
@@ -17,15 +21,23 @@ class LocalDataSource @Inject constructor(private val movieDao: MovieDao) {
         return movieDao.getTvShows()
     }
 
+    fun getFavoriteMovies(): DataSource.Factory<Int, MovieEntity> {
+        return movieDao.getFavoriteMovies()
+    }
+
+    fun getFavoriteTvShows(): DataSource.Factory<Int, MovieEntity> {
+        return movieDao.getFavoriteTvShows()
+    }
+
     fun checkMovieFavorite(id: Int): LiveData<Boolean> {
         return movieDao.checkMovieFavorite(id)
     }
 
-    suspend fun insertMovie(movieEntity: MovieEntity) {
-        withContext(Dispatchers.IO) { movieDao.insert(movieEntity) }
+    suspend fun addFavoriteMovie(id: Int) {
+        withContext(Dispatchers.IO) { movieDao.addFavorite(id) }
     }
 
-    suspend fun deleteFavoriteMovie(movieEntity: MovieEntity) {
-        withContext(Dispatchers.IO) { movieDao.delete(movieEntity) }
+    suspend fun deleteFavoriteMovie(id: Int) {
+        withContext(Dispatchers.IO) { movieDao.removeFavorite(id) }
     }
 }

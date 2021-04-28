@@ -1,7 +1,6 @@
 package com.zairussalamdev.moviebox.data
 
 import androidx.lifecycle.LiveData
-import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import androidx.paging.toLiveData
 import com.zairussalamdev.moviebox.configs.Constants
@@ -14,8 +13,6 @@ import com.zairussalamdev.moviebox.data.remote.RemoteDataSource
 import com.zairussalamdev.moviebox.data.remote.responses.MovieResponse
 import com.zairussalamdev.moviebox.data.remote.responses.TvShowResponse
 import com.zairussalamdev.moviebox.vo.Resource
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class TMDBRepository @Inject constructor(
@@ -46,7 +43,7 @@ class TMDBRepository @Inject constructor(
                         movieType = Constants.TYPE_MOVIE,
                         id = movie.id
                     )
-                    withContext(Dispatchers.IO) { localDataSource.insertMovie(entity) }
+                    localDataSource.insertMovie(entity)
                 }
             }
         }.build()
@@ -76,7 +73,7 @@ class TMDBRepository @Inject constructor(
                         movieType = Constants.TYPE_TV_SHOW,
                         id = movie.id
                     )
-                    withContext(Dispatchers.IO) { localDataSource.insertMovie(entity) }
+                    localDataSource.insertMovie(entity)
                 }
             }
         }.build()
@@ -103,47 +100,37 @@ class TMDBRepository @Inject constructor(
         val response = remoteDataSource.getTvShowDetail(id)
         val genres = response.genres.map { genre -> genre.name }
         return DetailEntity(
-                response.overview,
-                response.title,
-                response.posterPath,
-                response.voteAverage,
-                response.popularity,
-                response.tagLine,
-                genres = genres,
-                response.id,
-                response.homepage,
-                response.status
+            response.overview,
+            response.title,
+            response.posterPath,
+            response.voteAverage,
+            response.popularity,
+            response.tagLine,
+            genres = genres,
+            response.id,
+            response.homepage,
+            response.status
         )
     }
 
     override fun getFavoriteMovies(): LiveData<PagedList<MovieEntity>> {
-        val config = PagedList.Config.Builder()
-                .setEnablePlaceholders(false)
-                .setInitialLoadSizeHint(4)
-                .setPageSize(4)
-                .build()
-        return LivePagedListBuilder(localDataSource.getMovies(), config).build()
+        return localDataSource.getFavoriteMovies().toLiveData(4)
     }
 
     override fun getFavoriteTvShows(): LiveData<PagedList<MovieEntity>> {
-        val config = PagedList.Config.Builder()
-                .setEnablePlaceholders(false)
-                .setInitialLoadSizeHint(4)
-                .setPageSize(4)
-                .build()
-        return LivePagedListBuilder(localDataSource.getTvShows(), config).build()
+        return localDataSource.getFavoriteTvShows().toLiveData(4)
     }
 
     override fun checkMovieFavorite(id: Int): LiveData<Boolean> {
         return localDataSource.checkMovieFavorite(id)
     }
 
-    override suspend fun insertFavoriteMovie(movie: MovieEntity) {
-        localDataSource.insertMovie(movie)
+    override suspend fun insertFavoriteMovie(id: Int) {
+        localDataSource.addFavoriteMovie(id)
     }
 
-    override suspend fun deleteFavoriteMovie(movie: MovieEntity) {
-        localDataSource.deleteFavoriteMovie(movie)
+    override suspend fun deleteFavoriteMovie(id: Int) {
+        localDataSource.deleteFavoriteMovie(id)
     }
 
 }

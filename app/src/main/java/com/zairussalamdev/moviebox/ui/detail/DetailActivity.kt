@@ -57,6 +57,7 @@ class DetailActivity : AppCompatActivity() {
 
         detailViewModel.getErrorMessage().observe(this, {
             if (it.isNotEmpty()) {
+                binding.fab.visibility = View.GONE
                 binding.errorMessage.apply {
                     visibility = View.VISIBLE
                     text = it
@@ -112,12 +113,12 @@ class DetailActivity : AppCompatActivity() {
 
     private fun mapDetailToMovie(detailEntity: DetailEntity, movieType: Int): MovieEntity {
         return MovieEntity(
-                detailEntity.id,
-                detailEntity.overview,
-                detailEntity.title,
-                detailEntity.posterPath,
-                detailEntity.voteAverage,
-                movieType
+            detailEntity.id as Int,
+            detailEntity.overview,
+            detailEntity.title,
+            detailEntity.posterPath,
+            detailEntity.voteAverage,
+            movieType
         )
     }
 }

@@ -11,10 +11,10 @@ import com.zairussalamdev.moviebox.utils.DummyData
 import com.zairussalamdev.moviebox.utils.LiveDataTestUtil
 import com.zairussalamdev.moviebox.utils.PagedListUtil
 import com.zairussalamdev.moviebox.utils.TestCoroutineRule
+import com.zairussalamdev.moviebox.vo.Resource
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -31,7 +31,6 @@ class TMDBRepositoryTest {
     val testCoroutineRule = TestCoroutineRule()
 
     private var remoteDataSource = mock(RemoteDataSource::class.java)
-
     private var localDataSource = mock(LocalDataSource::class.java)
 
     private lateinit var tmdbRepository: TMDBRepository
@@ -44,24 +43,30 @@ class TMDBRepositoryTest {
     @Test
     fun `get movie list success`() {
         testCoroutineRule.runBlockingTest {
-            val response = DummyData.getDummyMovieListResponse()
-            `when`(remoteDataSource.getMovieList()).thenReturn(response)
-            val result = tmdbRepository.getMovieList()
-            assertNotNull(result)
-            verify(remoteDataSource).getMovieList()
-            assertEquals(response.movies.size, result.size)
+            val data = DummyData.getDummyListData()
+            val dataSourceFactory =
+                mock(DataSource.Factory::class.java) as DataSource.Factory<Int, MovieEntity>
+            `when`(localDataSource.getMovies()).thenReturn(dataSourceFactory)
+            tmdbRepository.getMovieList()
+
+            val result = Resource.success(PagedListUtil.mockPagedList(data))
+            verify(localDataSource).getMovies()
+            assertNotNull(result.data)
         }
     }
 
     @Test
     fun `get tv show list success`() {
         testCoroutineRule.runBlockingTest {
-            val response = DummyData.getDummyTvShowListResponse()
-            `when`(remoteDataSource.getTvShowList()).thenReturn(response)
-            val result = tmdbRepository.getTvShowsList()
-            assertNotNull(result)
-            verify(remoteDataSource).getTvShowList()
-            assertEquals(response.tvShows.size, result.size)
+            val data = DummyData.getDummyListData()
+            val dataSourceFactory =
+                mock(DataSource.Factory::class.java) as DataSource.Factory<Int, MovieEntity>
+            `when`(localDataSource.getTvShows()).thenReturn(dataSourceFactory)
+            tmdbRepository.getTvShowsList()
+
+            val result = Resource.success(PagedListUtil.mockPagedList(data))
+            verify(localDataSource).getTvShows()
+            assertNotNull(result.data)
         }
     }
 
@@ -71,8 +76,10 @@ class TMDBRepositoryTest {
             val id = 1
             val response = DummyData.getDummyMovieDetailResponse()
             `when`(remoteDataSource.getMovieDetail(id)).thenReturn(response)
+
             val result = tmdbRepository.getMovieDetail(id)
             assertNotNull(result)
+
             verify(remoteDataSource).getMovieDetail(id)
             assertEquals(response.title, result.title)
         }
@@ -84,8 +91,10 @@ class TMDBRepositoryTest {
             val id = 1
             val response = DummyData.getDummyTvShowDetailResponse()
             `when`(remoteDataSource.getTvShowDetail(id)).thenReturn(response)
+
             val result = tmdbRepository.getTvShowDetail(id)
             assertNotNull(result)
+
             verify(remoteDataSource).getTvShowDetail(id)
             assertEquals(response.title, result.title)
         }
@@ -97,8 +106,10 @@ class TMDBRepositoryTest {
         val dataSourceFactory = mock(DataSource.Factory::class.java) as DataSource.Factory<Int, MovieEntity>
         `when`(localDataSource.getFavoriteMovies()).thenReturn(dataSourceFactory)
         tmdbRepository.getFavoriteMovies()
+
         val result = PagedListUtil.mockPagedList(response)
         verify(localDataSource).getFavoriteMovies()
+
         assertNotNull(result)
         assertEquals(response.size, result.size)
     }
@@ -108,9 +119,11 @@ class TMDBRepositoryTest {
         val response = DummyData.getDummyListData()
         val dataSourceFactory = mock(DataSource.Factory::class.java) as DataSource.Factory<Int, MovieEntity>
         `when`(localDataSource.getFavoriteTvShows()).thenReturn(dataSourceFactory)
+
         tmdbRepository.getFavoriteTvShows()
         val result = PagedListUtil.mockPagedList(response)
         verify(localDataSource).getFavoriteTvShows()
+
         assertNotNull(result)
         assertEquals(response.size, result.size)
     }
@@ -122,9 +135,10 @@ class TMDBRepositoryTest {
         val isFavorite = MutableLiveData<Boolean>()
         isFavorite.value = false
         `when`(localDataSource.checkMovieFavorite(movieId)).thenReturn(isFavorite)
+
         val result = LiveDataTestUtil.getValue(tmdbRepository.checkMovieFavorite(movieId))
         verify(localDataSource).checkMovieFavorite(movieId)
 
-        Assert.assertEquals(expected, result)
+        assertEquals(expected, result)
     }
 }

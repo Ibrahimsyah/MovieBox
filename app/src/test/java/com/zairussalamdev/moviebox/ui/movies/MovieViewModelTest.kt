@@ -1,14 +1,18 @@
 package com.zairussalamdev.moviebox.ui.movies
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.paging.PagedList
 import com.zairussalamdev.moviebox.data.TMDBRepository
 import com.zairussalamdev.moviebox.data.local.entities.MovieEntity
-import com.zairussalamdev.moviebox.utils.DummyData
 import com.zairussalamdev.moviebox.utils.TestCoroutineRule
+import com.zairussalamdev.moviebox.vo.Resource
+import com.zairussalamdev.moviebox.vo.Status
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import okhttp3.ResponseBody
-import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -34,10 +38,10 @@ class MovieViewModelTest {
     private lateinit var tmdbRepository: TMDBRepository
 
     @Mock
-    private lateinit var listObserver: Observer<List<MovieEntity>>
+    private lateinit var pagedList: PagedList<MovieEntity>
 
     @Mock
-    private lateinit var errorObserver: Observer<String>
+    private lateinit var listObserver: Observer<Resource<PagedList<MovieEntity>>>
 
     private lateinit var movieViewModel: MovieViewModel
     private lateinit var responseHttpError: HttpException
@@ -52,79 +56,82 @@ class MovieViewModelTest {
     @Test
     fun `get movie list success`() {
         testCoroutineRule.runBlockingTest {
-            val dummyList = DummyData.getDummyListData()
-            `when`(tmdbRepository.getMovieList()).thenReturn(dummyList)
-            val movies = tmdbRepository.getMovieList()
-            assertNotNull(movies)
+            val dummyList = pagedList
+            val value = Resource(Status.SUCCESS, dummyList, null)
+            val expectation = MutableLiveData<Resource<PagedList<MovieEntity>>>()
+            expectation.value = value
+            `when`(tmdbRepository.getMovieList()).thenReturn(expectation)
+
+            val result = movieViewModel.getMovieList()
+            result.observeForever(listObserver)
+            verify(listObserver).onChanged(value)
             verify(tmdbRepository).getMovieList()
-            movieViewModel.getMovieList().observeForever(listObserver)
-            verify(listObserver).onChanged(dummyList)
+
+            assertEquals(expectation.value, result.value)
+            assertEquals(expectation.value?.data, result.value?.data)
+            assertNull(result.value?.message)
         }
     }
 
     @Test
     fun `get movie list with no data`() {
         testCoroutineRule.runBlockingTest {
-            val expectedError = "No Data Found"
-            `when`(tmdbRepository.getMovieList()).thenReturn(listOf())
-            val movies = movieViewModel.getMovieList()
-            assertNotNull(movies)
+            val errorMessage = "No Data Found"
+            val dummyList = pagedList
+            val value = Resource(Status.ERROR, dummyList, errorMessage)
+            val expectation = MutableLiveData<Resource<PagedList<MovieEntity>>>()
+            expectation.value = value
+            `when`(tmdbRepository.getMovieList()).thenReturn(expectation)
+
+            val result = movieViewModel.getMovieList()
+            result.observeForever(listObserver)
+            verify(listObserver).onChanged(value)
             verify(tmdbRepository).getMovieList()
-            movieViewModel.getErrorMessage().observeForever(errorObserver)
-            verify(errorObserver).onChanged(expectedError)
+
+            assertEquals(expectation.value, result.value)
+            assertEquals(expectation.value?.message, result.value?.message)
+            assertEquals(expectation.value?.message, errorMessage)
         }
     }
-
-    @Test
-    fun `get movie list with HTTP error`() {
-        testCoroutineRule.runBlockingTest {
-            val expectedError = "HTTP Error"
-            `when`(tmdbRepository.getMovieList()).thenThrow(responseHttpError)
-            val movies = movieViewModel.getMovieList()
-            assertNotNull(movies)
-            verify(tmdbRepository).getMovieList()
-            movieViewModel.getErrorMessage().observeForever(errorObserver)
-            verify(errorObserver).onChanged(expectedError)
-        }
-    }
-
 
     @Test
     fun `get TV Show list success`() {
         testCoroutineRule.runBlockingTest {
-            val dummyList = DummyData.getDummyListData()
-            `when`(tmdbRepository.getTvShowsList()).thenReturn(dummyList)
-            val tvShows = tmdbRepository.getTvShowsList()
-            assertNotNull(tvShows)
+            val dummyList = pagedList
+            val value = Resource(Status.SUCCESS, dummyList, null)
+            val expectation = MutableLiveData<Resource<PagedList<MovieEntity>>>()
+            expectation.value = value
+            `when`(tmdbRepository.getTvShowsList()).thenReturn(expectation)
+
+            val result = movieViewModel.getTvShowsList()
+            result.observeForever(listObserver)
+            verify(listObserver).onChanged(value)
             verify(tmdbRepository).getTvShowsList()
-            movieViewModel.getTvShowsList().observeForever(listObserver)
-            verify(listObserver).onChanged(dummyList)
+
+            assertEquals(expectation.value, result.value)
+            assertEquals(expectation.value?.data, result.value?.data)
+            assertNull(result.value?.message)
         }
     }
 
     @Test
     fun `get TV Show list with no data`() {
         testCoroutineRule.runBlockingTest {
-            val expectedError = "No Data Found"
-            `when`(tmdbRepository.getTvShowsList()).thenReturn(listOf())
-            val tvShows = movieViewModel.getTvShowsList()
-            assertNotNull(tvShows)
-            verify(tmdbRepository).getTvShowsList()
-            movieViewModel.getErrorMessage().observeForever(errorObserver)
-            verify(errorObserver).onChanged(expectedError)
-        }
-    }
+            val errorMessage = "No Data Found"
+            val dummyList = pagedList
+            val value = Resource(Status.ERROR, dummyList, errorMessage)
+            val expectation = MutableLiveData<Resource<PagedList<MovieEntity>>>()
+            expectation.value = value
+            `when`(tmdbRepository.getTvShowsList()).thenReturn(expectation)
 
-    @Test
-    fun `get TV Show list with HTTP error`() {
-        testCoroutineRule.runBlockingTest {
-            val expectedError = "HTTP Error"
-            `when`(tmdbRepository.getTvShowsList()).thenThrow(responseHttpError)
-            val movies = movieViewModel.getTvShowsList()
-            assertNotNull(movies)
+            val result = movieViewModel.getTvShowsList()
+            result.observeForever(listObserver)
+            verify(listObserver).onChanged(value)
             verify(tmdbRepository).getTvShowsList()
-            movieViewModel.getErrorMessage().observeForever(errorObserver)
-            verify(errorObserver).onChanged(expectedError)
+
+            assertEquals(expectation.value, result.value)
+            assertEquals(expectation.value?.message, result.value?.message)
+            assertEquals(expectation.value?.message, errorMessage)
         }
     }
 }

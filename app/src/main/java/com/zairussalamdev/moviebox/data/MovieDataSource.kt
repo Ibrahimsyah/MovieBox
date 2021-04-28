@@ -21,7 +21,7 @@ interface MovieDataSource {
 
     fun checkMovieFavorite(id: Int): LiveData<Boolean>
 
-    suspend fun insertFavoriteMovie(movie: MovieEntity)
+    suspend fun insertFavoriteMovie(id: Int)
 
-    suspend fun deleteFavoriteMovie(movie: MovieEntity)
+    suspend fun deleteFavoriteMovie(id: Int)
 }

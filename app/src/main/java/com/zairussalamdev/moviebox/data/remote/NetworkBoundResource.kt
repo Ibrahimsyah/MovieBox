@@ -14,29 +14,7 @@ abstract class NetworkBoundResource<ResultType, RequestType> {
         val dataFromDb = populateDataFromDb()
         result.addSource(dataFromDb) {
             if (shouldFetch(it)) {
-                val apiResponse = runBlocking { networkCall() }
-                result.addSource(apiResponse) { response ->
-                    result.removeSource(apiResponse)
-                    result.removeSource(dataFromDb)
-                    when (response.status) {
-                        StatusResponse.SUCCESS -> {
-                            runBlocking(Dispatchers.IO) { saveCallResult(response.body) }
-                            result.addSource(populateDataFromDb()) { dbData ->
-                                result.postValue(Resource.success(dbData))
-                            }
-                        }
-                        StatusResponse.EMPTY -> {
-                            result.addSource(populateDataFromDb()) { dbData ->
-                                result.postValue(Resource.success(dbData))
-                            }
-                        }
-                        StatusResponse.ERROR -> {
-                            result.addSource(dataFromDb) { newData ->
-                                result.postValue(Resource.error(response.message, newData))
-                            }
-                        }
-                    }
-                }
+                fetchDataFromNetwork(dataFromDb)
             } else {
                 result.postValue(Resource.success(it))
             }
@@ -48,4 +26,29 @@ abstract class NetworkBoundResource<ResultType, RequestType> {
     protected abstract fun shouldFetch(data: ResultType?): Boolean
     protected abstract suspend fun networkCall(): LiveData<ApiResponse<RequestType>>
     protected abstract suspend fun saveCallResult(data: RequestType)
+    private fun fetchDataFromNetwork(dataFromDb: LiveData<ResultType>) {
+        val apiResponse = runBlocking { networkCall() }
+        result.addSource(apiResponse) { response ->
+            result.removeSource(apiResponse)
+            result.removeSource(dataFromDb)
+            when (response.status) {
+                StatusResponse.SUCCESS -> {
+                    runBlocking(Dispatchers.IO) { saveCallResult(response.body) }
+                    result.addSource(populateDataFromDb()) { dbData ->
+                        result.postValue(Resource.success(dbData))
+                    }
+                }
+                StatusResponse.EMPTY -> {
+                    result.addSource(populateDataFromDb()) { dbData ->
+                        result.postValue(Resource.success(dbData))
+                    }
+                }
+                StatusResponse.ERROR -> {
+                    result.addSource(dataFromDb) { newData ->
+                        result.postValue(Resource.error(response.message, newData))
+                    }
+                }
+            }
+        }
+    }
 }
