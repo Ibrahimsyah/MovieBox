@@ -4,11 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.paging.PagedList
 import com.zairussalamdev.moviebox.data.local.entities.DetailEntity
 import com.zairussalamdev.moviebox.data.local.entities.MovieEntity
+import com.zairussalamdev.moviebox.vo.Resource
 
 interface MovieDataSource {
-    suspend fun getMovieList(): List<MovieEntity>
+    fun getMovieList(): LiveData<Resource<PagedList<MovieEntity>>>
 
-    suspend fun getTvShowsList(): List<MovieEntity>
+    fun getTvShowsList(): LiveData<Resource<PagedList<MovieEntity>>>
 
     suspend fun getMovieDetail(id: Int): DetailEntity
 
@@ -20,7 +21,7 @@ interface MovieDataSource {
 
     fun checkMovieFavorite(id: Int): LiveData<Boolean>
 
-    suspend fun insertFavoriteMovie(movie: MovieEntity)
+    suspend fun insertFavoriteMovie(id: Int)
 
-    suspend fun deleteFavoriteMovie(movie: MovieEntity)
+    suspend fun deleteFavoriteMovie(id: Int)
 }

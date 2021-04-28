@@ -17,7 +17,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 import retrofit2.HttpException
@@ -51,7 +50,6 @@ class DetailViewModelTest {
     private var dummyDetail = DummyData.getDummyDetailData()
     private var dummyEntity = DummyData.getDummyListData()[0]
 
-
     @Before
     fun init() {
         detailViewModel = DetailViewModel(tmdbRepository)
@@ -64,10 +62,12 @@ class DetailViewModelTest {
         testCoroutineRule.runBlockingTest {
             val movieId = 1
             `when`(tmdbRepository.getMovieDetail(movieId)).thenReturn(dummyDetail)
+
             val result = detailViewModel.getMovieDetail(movieId)
-            assertNotNull(result)
+            result.observeForever(observer)
             verify(tmdbRepository).getMovieDetail(movieId)
-            detailViewModel.getMovieDetail(movieId).observeForever(observer)
+
+            assertNotNull(result)
             observer.onChanged(dummyDetail)
         }
     }
@@ -78,11 +78,13 @@ class DetailViewModelTest {
             val movieId = 1
             val expectedError = "HTTP Error"
             `when`(tmdbRepository.getMovieDetail(movieId)).thenThrow(responseHttpError)
+
             val result = detailViewModel.getMovieDetail(movieId)
             assertNotNull(result)
+
             verify(tmdbRepository).getMovieDetail(movieId)
             detailViewModel.getErrorMessage().observeForever(errorObserver)
-            Mockito.verify(errorObserver).onChanged(expectedError)
+            verify(errorObserver).onChanged(expectedError)
         }
     }
 
@@ -91,8 +93,10 @@ class DetailViewModelTest {
         testCoroutineRule.runBlockingTest {
             val movieId = 1
             `when`(tmdbRepository.getTvShowDetail(movieId)).thenReturn(dummyDetail)
+
             val result = detailViewModel.getTvShowDetail(movieId)
             assertNotNull(result)
+
             verify(tmdbRepository).getTvShowDetail(movieId)
             detailViewModel.getTvShowDetail(movieId).observeForever(observer)
             observer.onChanged(dummyDetail)
@@ -105,11 +109,13 @@ class DetailViewModelTest {
             val movieId = 1
             val expectedError = "HTTP Error"
             `when`(tmdbRepository.getTvShowDetail(movieId)).thenThrow(responseHttpError)
+
             val result = detailViewModel.getTvShowDetail(movieId)
             assertNotNull(result)
             verify(tmdbRepository).getTvShowDetail(movieId)
+
             detailViewModel.getErrorMessage().observeForever(errorObserver)
-            Mockito.verify(errorObserver).onChanged(expectedError)
+            verify(errorObserver).onChanged(expectedError)
         }
     }
 
@@ -119,32 +125,33 @@ class DetailViewModelTest {
         val expectation = MutableLiveData<Boolean>()
         expectation.value = false
         `when`(tmdbRepository.checkMovieFavorite(movieId)).thenReturn(expectation)
-        val result = detailViewModel.checkIsMovieFavorite(movieId).value
-        verify(tmdbRepository).checkMovieFavorite(movieId)
-        assertNotNull(result)
-        assertEquals(expectation.value, result)
 
-        detailViewModel.checkIsMovieFavorite(movieId).observeForever(isFavoriteObserver)
+        val result = detailViewModel.checkIsMovieFavorite(movieId)
+        result.observeForever(isFavoriteObserver)
+        verify(tmdbRepository).checkMovieFavorite(movieId)
         verify(isFavoriteObserver).onChanged(expectation.value)
+
+        assertNotNull(result.value)
+        assertEquals(expectation.value, result.value)
     }
 
     @Test
     fun `add a movie to favorite`() {
         testCoroutineRule.runBlockingTest {
-            val data = dummyEntity
-            `when`(tmdbRepository.insertFavoriteMovie(data)).thenReturn(Unit)
+            val id = 1
+            `when`(tmdbRepository.insertFavoriteMovie(id)).thenReturn(Unit)
             detailViewModel.addMovieToFavorite(dummyEntity)
-            verify(tmdbRepository).insertFavoriteMovie(data)
+            verify(tmdbRepository).insertFavoriteMovie(id)
         }
     }
 
     @Test
     fun `remove a movie from favorite`() {
         testCoroutineRule.runBlockingTest {
-            val data = dummyEntity
-            `when`(tmdbRepository.deleteFavoriteMovie(data)).thenReturn(Unit)
+            val id = 1
+            `when`(tmdbRepository.deleteFavoriteMovie(id)).thenReturn(Unit)
             detailViewModel.deleteMovieFromFavorite(dummyEntity)
-            verify(tmdbRepository).deleteFavoriteMovie(data)
+            verify(tmdbRepository).deleteFavoriteMovie(id)
         }
     }
 }

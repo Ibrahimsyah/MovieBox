@@ -11,8 +11,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.zairussalamdev.moviebox.App
 import com.zairussalamdev.moviebox.configs.Constants
 import com.zairussalamdev.moviebox.databinding.FragmentMoviesBinding
-import com.zairussalamdev.moviebox.ui.adapter.MovieAdapter
+import com.zairussalamdev.moviebox.ui.adapter.PagedMovieAdapter
 import com.zairussalamdev.moviebox.ui.detail.DetailActivity
+import com.zairussalamdev.moviebox.vo.Status
 import javax.inject.Inject
 
 class MovieFragment : Fragment() {
@@ -43,7 +44,7 @@ class MovieFragment : Fragment() {
 
         val movieType = arguments?.getInt(MOVIE_TYPE)
 
-        val adapter = MovieAdapter {
+        val adapter = PagedMovieAdapter {
             val intent = Intent(context, DetailActivity::class.java)
             intent.putExtra(DetailActivity.MOVIE_ID, it.id)
             intent.putExtra(DetailActivity.MOVIE_TYPE, movieType)
@@ -62,22 +63,35 @@ class MovieFragment : Fragment() {
         }
 
         data.observe(viewLifecycleOwner, {
-            adapter.setMovies(it)
-        })
-
-        movieViewModel.getLoading().observe(viewLifecycleOwner, {
-            binding.progressBar.visibility = if (it) View.VISIBLE else View.GONE
-        })
-
-        movieViewModel.getErrorMessage().observe(viewLifecycleOwner, {
-            if (it.isNotEmpty()) {
-                binding.errorMessage.apply {
-                    visibility = View.VISIBLE
-                    text = it
+            when (it.status) {
+                Status.SUCCESS -> {
+                    adapter.submitList(it.data)
+                    hideErrorMessage()
+                    showLoading(false)
                 }
-            } else {
-                binding.errorMessage.visibility = View.GONE
+                Status.LOADING -> {
+                    showLoading(true)
+                }
+                Status.ERROR -> {
+                    showErrorMessage(it.message as String)
+                    showLoading(false)
+                }
             }
         })
+    }
+
+    private fun showErrorMessage(message: String) {
+        binding.errorMessage.apply {
+            visibility = View.VISIBLE
+            text = message
+        }
+    }
+
+    private fun hideErrorMessage() {
+        binding.errorMessage.visibility = View.GONE
+    }
+
+    private fun showLoading(state: Boolean) {
+        binding.progressBar.visibility = if (state) View.VISIBLE else View.GONE
     }
 }

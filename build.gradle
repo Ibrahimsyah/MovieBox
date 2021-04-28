@@ -29,7 +29,7 @@ ext{
     coroutines_version = "1.4.3"
     retrofit_version = '2.9.0'
     dagger_version = '2.34.1'
-    room_version = '2.2.6'
+    room_version = '2.3.0'
     mockito_version = '3.8.0'
     android_core_test_version = '2.1.0'
     mockito_kotlin_version = '2.2.0'
