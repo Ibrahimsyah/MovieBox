@@ -7,7 +7,6 @@ import com.zairussalamdev.moviebox.configs.Constants
 import com.zairussalamdev.moviebox.data.local.LocalDataSource
 import com.zairussalamdev.moviebox.data.local.entities.DetailEntity
 import com.zairussalamdev.moviebox.data.local.entities.MovieEntity
-import com.zairussalamdev.moviebox.data.remote.ApiResponse
 import com.zairussalamdev.moviebox.data.remote.NetworkBoundResource
 import com.zairussalamdev.moviebox.data.remote.RemoteDataSource
 import com.zairussalamdev.moviebox.data.remote.responses.MovieResponse
@@ -21,17 +20,11 @@ class TMDBRepository @Inject constructor(
 ) : MovieDataSource {
     override fun getMovieList(): LiveData<Resource<PagedList<MovieEntity>>> {
         return object : NetworkBoundResource<PagedList<MovieEntity>, MovieResponse>() {
-            override fun populateDataFromDb(): LiveData<PagedList<MovieEntity>> {
-                return localDataSource.getMovies().toLiveData(4)
-            }
+            override fun populateDataFromDb() = localDataSource.getMovies().toLiveData(4)
 
-            override fun shouldFetch(data: PagedList<MovieEntity>?): Boolean {
-                return data.isNullOrEmpty()
-            }
+            override fun shouldFetch(data: PagedList<MovieEntity>?) = data.isNullOrEmpty()
 
-            override suspend fun networkCall(): LiveData<ApiResponse<MovieResponse>> {
-                return remoteDataSource.getMovieList()
-            }
+            override suspend fun networkCall() = remoteDataSource.getMovieList()
 
             override suspend fun saveCallResult(data: MovieResponse) {
                 data.movies.forEach { movie ->
@@ -51,17 +44,11 @@ class TMDBRepository @Inject constructor(
 
     override fun getTvShowsList(): LiveData<Resource<PagedList<MovieEntity>>> {
         return object : NetworkBoundResource<PagedList<MovieEntity>, TvShowResponse>() {
-            override fun populateDataFromDb(): LiveData<PagedList<MovieEntity>> {
-                return localDataSource.getTvShows().toLiveData(4)
-            }
+            override fun populateDataFromDb() = localDataSource.getTvShows().toLiveData(4)
 
-            override fun shouldFetch(data: PagedList<MovieEntity>?): Boolean {
-                return data.isNullOrEmpty()
-            }
+            override fun shouldFetch(data: PagedList<MovieEntity>?) = data.isNullOrEmpty()
 
-            override suspend fun networkCall(): LiveData<ApiResponse<TvShowResponse>> {
-                return remoteDataSource.getTvShowList()
-            }
+            override suspend fun networkCall() = remoteDataSource.getTvShowList()
 
             override suspend fun saveCallResult(data: TvShowResponse) {
                 data.tvShows.forEach { movie ->
@@ -132,5 +119,4 @@ class TMDBRepository @Inject constructor(
     override suspend fun deleteFavoriteMovie(id: Int) {
         localDataSource.deleteFavoriteMovie(id)
     }
-
 }
