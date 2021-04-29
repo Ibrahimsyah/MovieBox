@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
 import com.nhaarman.mockitokotlin2.verify
 import com.zairussalamdev.moviebox.data.local.LocalDataSource
+import com.zairussalamdev.moviebox.data.local.entities.DetailEntity
 import com.zairussalamdev.moviebox.data.local.entities.MovieEntity
 import com.zairussalamdev.moviebox.data.remote.RemoteDataSource
 import com.zairussalamdev.moviebox.utils.DummyData
@@ -74,29 +75,30 @@ class TMDBRepositoryTest {
     fun `get movie detail success`() {
         testCoroutineRule.runBlockingTest {
             val id = 1
-            val response = DummyData.getDummyMovieDetailResponse()
-            `when`(remoteDataSource.getMovieDetail(id)).thenReturn(response)
+            val response = DummyData.getDummyDetailData()
+            val expectation = MutableLiveData<DetailEntity>()
+            expectation.value = response
+            `when`(localDataSource.getMovieDetail(id)).thenReturn(expectation)
 
             val result = tmdbRepository.getMovieDetail(id)
             assertNotNull(result)
 
-            verify(remoteDataSource).getMovieDetail(id)
-            assertEquals(response.title, result.title)
+            verify(localDataSource).getMovieDetail(id)
         }
     }
 
-    @Test
     fun `get tv show detail success`() {
         testCoroutineRule.runBlockingTest {
             val id = 1
-            val response = DummyData.getDummyTvShowDetailResponse()
-            `when`(remoteDataSource.getTvShowDetail(id)).thenReturn(response)
+            val response = DummyData.getDummyDetailData()
+            val expectation = MutableLiveData<DetailEntity>()
+            expectation.value = response
+            `when`(localDataSource.getTvShowDetail(id)).thenReturn(expectation)
 
             val result = tmdbRepository.getTvShowDetail(id)
             assertNotNull(result)
 
-            verify(remoteDataSource).getTvShowDetail(id)
-            assertEquals(response.title, result.title)
+            verify(localDataSource).getTvShowDetail(id)
         }
     }
 
