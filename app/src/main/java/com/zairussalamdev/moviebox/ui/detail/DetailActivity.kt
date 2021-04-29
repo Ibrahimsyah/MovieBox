@@ -14,6 +14,7 @@ import com.zairussalamdev.moviebox.data.local.entities.MovieEntity
 import com.zairussalamdev.moviebox.databinding.ActivityDetailBinding
 import com.zairussalamdev.moviebox.ui.adapter.MovieGenreAdapter
 import com.zairussalamdev.moviebox.utils.ImageNetwork
+import com.zairussalamdev.moviebox.vo.Status
 import javax.inject.Inject
 
 class DetailActivity : AppCompatActivity() {
@@ -28,6 +29,7 @@ class DetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetailBinding
     private lateinit var detailEntity: DetailEntity
+    private lateinit var genreAdapter: MovieGenreAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         (applicationContext as App).appComponent.inject(this)
@@ -36,9 +38,9 @@ class DetailActivity : AppCompatActivity() {
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        genreAdapter = MovieGenreAdapter()
         val movieId = intent.getIntExtra(MOVIE_ID, 0)
         val movieType = intent.getIntExtra(MOVIE_TYPE, Constants.TYPE_MOVIE)
-        val genreAdapter = MovieGenreAdapter()
         var isMovieFavorite = false
 
         with(binding.rvMovieGenre) {
@@ -51,45 +53,26 @@ class DetailActivity : AppCompatActivity() {
             adapter = genreAdapter
         }
 
-        detailViewModel.getLoading().observe(this, {
-            binding.progressBar.visibility = if (it) View.VISIBLE else View.GONE
-        })
-
-        detailViewModel.getErrorMessage().observe(this, {
-            if (it.isNotEmpty()) {
-                binding.fab.visibility = View.GONE
-                binding.errorMessage.apply {
-                    visibility = View.VISIBLE
-                    text = it
-                }
-            } else {
-                binding.errorMessage.visibility = View.GONE
-            }
-        })
-
         val data = detailViewModel.let {
             if (movieType == Constants.TYPE_MOVIE) it.getMovieDetail(movieId)
             else it.getTvShowDetail(movieId)
         }
 
-        data.observe(this, {
-            detailEntity = it
-            val rating = resources.getString(R.string.movie_rating)
-            with(binding) {
-                moviePoster.load(ImageNetwork.getFullSizeUrl(it.posterPath as String))
-                movieTitle.text = it.title
-                moviePopularity.text = it.popularity.toString()
-                movieRating.text = String.format(rating, it.voteAverage)
-                movieTagline.text = it.tagLine
-                movieOverview.text = it.overview
-                movieStatus.text = it.status
-                movieHomepage.text = it.homepage
-                genreAdapter.setGenres(it.genres)
-                overviewLabel.visibility = View.VISIBLE
-                statusLabel.visibility = View.VISIBLE
-                homepageLabel.visibility = View.VISIBLE
-                popularityLabel.visibility = View.VISIBLE
-                ratingLabel.visibility = View.VISIBLE
+        data.observe(this, { detail ->
+            when (detail.status) {
+                Status.SUCCESS -> {
+                    hideErrorMessage()
+                    showLoading(false)
+                    showData(detail.data)
+                    detailEntity = detail.data as DetailEntity
+                }
+                Status.LOADING -> {
+                    showLoading(true)
+                }
+                Status.ERROR -> {
+                    showLoading(false)
+                    showErrorMessage(detail.message as String)
+                }
             }
         })
 
@@ -111,14 +94,52 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
+    private fun showData(detail: DetailEntity?) {
+        detail?.let {
+            val rating = resources.getString(R.string.movie_rating)
+            with(binding) {
+                moviePoster.load(ImageNetwork.getFullSizeUrl(it.posterPath as String))
+                movieTitle.text = it.title
+                moviePopularity.text = it.popularity.toString()
+                movieRating.text = String.format(rating, it.voteAverage)
+                movieTagline.text = it.tagLine
+                movieOverview.text = it.overview
+                movieStatus.text = it.status
+                movieHomepage.text = it.homepage
+                genreAdapter.setGenres(it.genres)
+                overviewLabel.visibility = View.VISIBLE
+                statusLabel.visibility = View.VISIBLE
+                homepageLabel.visibility = View.VISIBLE
+                popularityLabel.visibility = View.VISIBLE
+                ratingLabel.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    private fun showErrorMessage(message: String) {
+        binding.fab.visibility = View.GONE
+        binding.errorMessage.apply {
+            visibility = View.VISIBLE
+            text = message
+        }
+    }
+
+    private fun hideErrorMessage() {
+        binding.errorMessage.visibility = View.GONE
+    }
+
+    private fun showLoading(state: Boolean) {
+        binding.progressBar.visibility = if (state) View.VISIBLE else View.GONE
+    }
+
     private fun mapDetailToMovie(detailEntity: DetailEntity, movieType: Int): MovieEntity {
         return MovieEntity(
-            detailEntity.id as Int,
-            detailEntity.overview,
-            detailEntity.title,
-            detailEntity.posterPath,
-            detailEntity.voteAverage,
-            movieType
+                detailEntity.id as Int,
+                detailEntity.overview,
+                detailEntity.title,
+                detailEntity.posterPath,
+                detailEntity.voteAverage,
+                movieType
         )
     }
 }

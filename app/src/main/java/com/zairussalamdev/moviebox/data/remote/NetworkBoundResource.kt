@@ -33,7 +33,10 @@ abstract class NetworkBoundResource<ResultType, RequestType> {
             result.removeSource(dataFromDb)
             when (response.status) {
                 StatusResponse.SUCCESS -> {
-                    runBlocking(Dispatchers.IO) { saveCallResult(response.body) }
+                    runBlocking(Dispatchers.IO) {
+                        @Suppress("UNCHECKED_CAST")
+                        saveCallResult(response.body as RequestType)
+                    }
                     result.addSource(populateDataFromDb()) { dbData ->
                         result.postValue(Resource.success(dbData))
                     }

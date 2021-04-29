@@ -1,6 +1,16 @@
 package com.zairussalamdev.moviebox.data.local.entities
 
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import com.zairussalamdev.moviebox.configs.Constants
+
+@Entity(tableName = "details")
 data class DetailEntity(
+        @PrimaryKey
+        @ColumnInfo(name = "movie_id")
+        val id: Int? = null,
+
         val overview: String? = null,
         val title: String? = null,
         val posterPath: String? = null,
@@ -8,7 +18,7 @@ data class DetailEntity(
         val popularity: Double? = null,
         val tagLine: String? = null,
         val genres: List<String> = listOf(),
-        val id: Int? = null,
         val homepage: String? = null,
         val status: String? = null,
+        val movieType: Int? = Constants.TYPE_MOVIE
 )

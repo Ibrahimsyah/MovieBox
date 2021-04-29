@@ -3,6 +3,7 @@ package com.zairussalamdev.moviebox.data.local
 import androidx.lifecycle.LiveData
 import androidx.paging.DataSource
 import com.zairussalamdev.moviebox.data.local.database.MovieDao
+import com.zairussalamdev.moviebox.data.local.entities.DetailEntity
 import com.zairussalamdev.moviebox.data.local.entities.MovieEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -10,15 +11,27 @@ import javax.inject.Inject
 
 class LocalDataSource @Inject constructor(private val movieDao: MovieDao) {
     suspend fun insertMovie(movie: MovieEntity) {
-        withContext(Dispatchers.IO) { movieDao.insert(movie) }
+        withContext(Dispatchers.IO) { movieDao.insertMovie(movie) }
+    }
+
+    suspend fun insertDetailMovie(movieDetail: DetailEntity) {
+        withContext(Dispatchers.IO) { movieDao.insertDetail(movieDetail) }
     }
 
     fun getMovies(): DataSource.Factory<Int, MovieEntity> {
         return movieDao.getMovies()
     }
 
+    fun getMovieDetail(movieId: Int): LiveData<DetailEntity> {
+        return movieDao.getMovieDetail(movieId)
+    }
+
     fun getTvShows(): DataSource.Factory<Int, MovieEntity> {
         return movieDao.getTvShows()
+    }
+
+    fun getTvShowDetail(tvShowId: Int): LiveData<DetailEntity> {
+        return movieDao.getTvShowDetail(tvShowId)
     }
 
     fun getFavoriteMovies(): DataSource.Factory<Int, MovieEntity> {
