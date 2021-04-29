@@ -9,6 +9,7 @@ import com.zairussalamdev.moviebox.data.local.entities.DetailEntity
 import com.zairussalamdev.moviebox.data.local.entities.MovieEntity
 import com.zairussalamdev.moviebox.data.remote.NetworkBoundResource
 import com.zairussalamdev.moviebox.data.remote.RemoteDataSource
+import com.zairussalamdev.moviebox.data.remote.responses.DetailResponse
 import com.zairussalamdev.moviebox.data.remote.responses.MovieResponse
 import com.zairussalamdev.moviebox.data.remote.responses.TvShowResponse
 import com.zairussalamdev.moviebox.vo.Resource
@@ -53,12 +54,12 @@ class TMDBRepository @Inject constructor(
             override suspend fun saveCallResult(data: TvShowResponse) {
                 data.tvShows.forEach { movie ->
                     val entity = MovieEntity(
-                        overview = movie.overview,
-                        title = movie.name,
-                        posterPath = movie.posterPath,
-                        voteAverage = movie.voteAverage,
-                        movieType = Constants.TYPE_TV_SHOW,
-                        id = movie.id
+                            overview = movie.overview,
+                            title = movie.name,
+                            posterPath = movie.posterPath,
+                            voteAverage = movie.voteAverage,
+                            movieType = Constants.TYPE_TV_SHOW,
+                            id = movie.id
                     )
                     localDataSource.insertMovie(entity)
                 }
@@ -66,38 +67,62 @@ class TMDBRepository @Inject constructor(
         }.build()
     }
 
-    override suspend fun getMovieDetail(id: Int): DetailEntity {
-        val response = remoteDataSource.getMovieDetail(id)
-        val genres = response.genres.map { genre -> genre.name }
-        return DetailEntity(
-                response.overview,
-                response.title,
-                response.posterPath,
-                response.voteAverage,
-                response.popularity,
-                response.tagLine,
-                genres = genres,
-                response.id,
-                response.homepage,
-                response.status
-        )
+    override fun getMovieDetail(id: Int): LiveData<Resource<DetailEntity>> {
+        return object : NetworkBoundResource<DetailEntity, DetailResponse>() {
+            override fun populateDataFromDb() = localDataSource.getMovieDetail(id)
+
+            override fun shouldFetch(data: DetailEntity?) = data == null
+
+            override suspend fun networkCall() = remoteDataSource.getMovieDetail(id)
+
+            override suspend fun saveCallResult(data: DetailResponse) {
+                val genres = data.genres.map { genre -> genre.name }
+                val detail = DetailEntity(
+                        data.id,
+                        data.overview,
+                        data.title,
+                        data.posterPath,
+                        data.voteAverage,
+                        data.popularity,
+                        data.tagLine,
+                        genres,
+                        data.homepage,
+                        data.status,
+                        Constants.TYPE_MOVIE
+                )
+                localDataSource.insertDetailMovie(detail)
+            }
+
+        }.build()
     }
 
-    override suspend fun getTvShowDetail(id: Int): DetailEntity {
-        val response = remoteDataSource.getTvShowDetail(id)
-        val genres = response.genres.map { genre -> genre.name }
-        return DetailEntity(
-            response.overview,
-            response.title,
-            response.posterPath,
-            response.voteAverage,
-            response.popularity,
-            response.tagLine,
-            genres = genres,
-            response.id,
-            response.homepage,
-            response.status
-        )
+    override fun getTvShowDetail(id: Int): LiveData<Resource<DetailEntity>> {
+        return object : NetworkBoundResource<DetailEntity, DetailResponse>() {
+            override fun populateDataFromDb() = localDataSource.getTvShowDetail(id)
+
+            override fun shouldFetch(data: DetailEntity?) = data == null
+
+            override suspend fun networkCall() = remoteDataSource.getTvShowDetail(id)
+
+            override suspend fun saveCallResult(data: DetailResponse) {
+                val genres = data.genres.map { genre -> genre.name }
+                val detail = DetailEntity(
+                        data.id,
+                        data.overview,
+                        data.title,
+                        data.posterPath,
+                        data.voteAverage,
+                        data.popularity,
+                        data.tagLine,
+                        genres,
+                        data.homepage,
+                        data.status,
+                        Constants.TYPE_TV_SHOW
+                )
+                localDataSource.insertDetailMovie(detail)
+            }
+
+        }.build()
     }
 
     override fun getFavoriteMovies(): LiveData<PagedList<MovieEntity>> {

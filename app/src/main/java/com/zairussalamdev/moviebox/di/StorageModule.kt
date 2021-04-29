@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.zairussalamdev.moviebox.configs.Constants
 import com.zairussalamdev.moviebox.data.local.database.MovieBoxDatabase
 import com.zairussalamdev.moviebox.data.local.database.MovieDao
+import com.zairussalamdev.moviebox.data.remote.responses.GenreConverter
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -15,6 +16,7 @@ class StorageModule(private val context: Context) {
     @Provides
     fun provideDatabase(): MovieBoxDatabase {
         return Room.databaseBuilder(context, MovieBoxDatabase::class.java, Constants.DB_NAME)
+                .addTypeConverter(GenreConverter())
                 .build()
     }
 

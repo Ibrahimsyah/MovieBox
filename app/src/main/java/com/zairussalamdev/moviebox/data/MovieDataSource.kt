@@ -11,9 +11,9 @@ interface MovieDataSource {
 
     fun getTvShowsList(): LiveData<Resource<PagedList<MovieEntity>>>
 
-    suspend fun getMovieDetail(id: Int): DetailEntity
+    fun getMovieDetail(id: Int): LiveData<Resource<DetailEntity>>
 
-    suspend fun getTvShowDetail(id: Int): DetailEntity
+    fun getTvShowDetail(id: Int): LiveData<Resource<DetailEntity>>
 
     fun getFavoriteMovies(): LiveData<PagedList<MovieEntity>>
 
