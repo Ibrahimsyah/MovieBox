@@ -98,7 +98,9 @@ class DetailActivity : AppCompatActivity() {
         detail?.let {
             val rating = resources.getString(R.string.movie_rating)
             with(binding) {
-                moviePoster.load(ImageNetwork.getFullSizeUrl(it.posterPath as String))
+                moviePoster.load(ImageNetwork.getFullSizeUrl(it.posterPath as String)) {
+                    crossfade(true)
+                }
                 movieTitle.text = it.title
                 moviePopularity.text = it.popularity.toString()
                 movieRating.text = String.format(rating, it.voteAverage)
@@ -134,12 +136,12 @@ class DetailActivity : AppCompatActivity() {
 
     private fun mapDetailToMovie(detailEntity: DetailEntity, movieType: Int): MovieEntity {
         return MovieEntity(
-                detailEntity.id as Int,
-                detailEntity.overview,
-                detailEntity.title,
-                detailEntity.posterPath,
-                detailEntity.voteAverage,
-                movieType
+            detailEntity.id,
+            detailEntity.overview,
+            detailEntity.title,
+            detailEntity.posterPath,
+            detailEntity.voteAverage,
+            movieType
         )
     }
 }

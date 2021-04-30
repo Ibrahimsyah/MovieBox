@@ -8,6 +8,7 @@ import com.zairussalamdev.moviebox.data.TMDBRepository
 import com.zairussalamdev.moviebox.data.local.entities.DetailEntity
 import com.zairussalamdev.moviebox.utils.DummyData
 import com.zairussalamdev.moviebox.utils.TestCoroutineRule
+import com.zairussalamdev.moviebox.vo.Resource
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -36,10 +37,7 @@ class DetailViewModelTest {
     private lateinit var tmdbRepository: TMDBRepository
 
     @Mock
-    private lateinit var observer: Observer<DetailEntity>
-
-    @Mock
-    private lateinit var errorObserver: Observer<String>
+    private lateinit var observer: Observer<Resource<DetailEntity>>
 
     @Mock
     private lateinit var isFavoriteObserver: Observer<Boolean>
@@ -61,30 +59,17 @@ class DetailViewModelTest {
     fun `get movie detail success`() {
         testCoroutineRule.runBlockingTest {
             val movieId = 1
-            `when`(tmdbRepository.getMovieDetail(movieId)).thenReturn(dummyDetail)
+            val resource = Resource.success(dummyDetail)
+            val expectation = MutableLiveData<Resource<DetailEntity>>()
+            expectation.value = resource
+            `when`(tmdbRepository.getMovieDetail(movieId)).thenReturn(expectation)
 
             val result = detailViewModel.getMovieDetail(movieId)
             result.observeForever(observer)
             verify(tmdbRepository).getMovieDetail(movieId)
 
             assertNotNull(result)
-            observer.onChanged(dummyDetail)
-        }
-    }
-
-    @Test
-    fun `get movie detail with HTTP error`() {
-        testCoroutineRule.runBlockingTest {
-            val movieId = 1
-            val expectedError = "HTTP Error"
-            `when`(tmdbRepository.getMovieDetail(movieId)).thenThrow(responseHttpError)
-
-            val result = detailViewModel.getMovieDetail(movieId)
-            assertNotNull(result)
-
-            verify(tmdbRepository).getMovieDetail(movieId)
-            detailViewModel.getErrorMessage().observeForever(errorObserver)
-            verify(errorObserver).onChanged(expectedError)
+            observer.onChanged(resource)
         }
     }
 
@@ -92,30 +77,17 @@ class DetailViewModelTest {
     fun `get tv show detail success`() {
         testCoroutineRule.runBlockingTest {
             val movieId = 1
-            `when`(tmdbRepository.getTvShowDetail(movieId)).thenReturn(dummyDetail)
+            val resource = Resource.success(dummyDetail)
+            val expectation = MutableLiveData<Resource<DetailEntity>>()
+            expectation.value = resource
+            `when`(tmdbRepository.getTvShowDetail(movieId)).thenReturn(expectation)
 
             val result = detailViewModel.getTvShowDetail(movieId)
             assertNotNull(result)
 
             verify(tmdbRepository).getTvShowDetail(movieId)
             detailViewModel.getTvShowDetail(movieId).observeForever(observer)
-            observer.onChanged(dummyDetail)
-        }
-    }
-
-    @Test
-    fun `get tv show detail with HTTP error`() {
-        testCoroutineRule.runBlockingTest {
-            val movieId = 1
-            val expectedError = "HTTP Error"
-            `when`(tmdbRepository.getTvShowDetail(movieId)).thenThrow(responseHttpError)
-
-            val result = detailViewModel.getTvShowDetail(movieId)
-            assertNotNull(result)
-            verify(tmdbRepository).getTvShowDetail(movieId)
-
-            detailViewModel.getErrorMessage().observeForever(errorObserver)
-            verify(errorObserver).onChanged(expectedError)
+            observer.onChanged(resource)
         }
     }
 

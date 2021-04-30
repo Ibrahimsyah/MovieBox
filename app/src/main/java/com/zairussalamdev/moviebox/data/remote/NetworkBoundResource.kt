@@ -3,14 +3,15 @@ package com.zairussalamdev.moviebox.data.remote
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import com.zairussalamdev.moviebox.vo.Resource
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
 
+@Suppress("UNCHECKED_CAST")
 abstract class NetworkBoundResource<ResultType, RequestType> {
     private val result = MediatorLiveData<Resource<ResultType>>()
 
-    fun build(): LiveData<Resource<ResultType>> {
+    init {
         result.postValue(Resource.loading(null))
+
+        @Suppress("LeakingThis")
         val dataFromDb = populateDataFromDb()
         result.addSource(dataFromDb) {
             if (shouldFetch(it)) {
@@ -19,28 +20,29 @@ abstract class NetworkBoundResource<ResultType, RequestType> {
                 result.postValue(Resource.success(it))
             }
         }
-        return result
     }
+
+    fun asLiveData() = result
 
     protected abstract fun populateDataFromDb(): LiveData<ResultType>
     protected abstract fun shouldFetch(data: ResultType?): Boolean
-    protected abstract suspend fun networkCall(): LiveData<ApiResponse<RequestType>>
-    protected abstract suspend fun saveCallResult(data: RequestType)
+    protected abstract fun networkCall(): LiveData<ApiResponse<RequestType>>
+    protected abstract fun saveCallResult(data: RequestType)
     private fun fetchDataFromNetwork(dataFromDb: LiveData<ResultType>) {
-        val apiResponse = runBlocking { networkCall() }
+        val apiResponse = networkCall()
         result.addSource(apiResponse) { response ->
             result.removeSource(apiResponse)
             result.removeSource(dataFromDb)
             when (response.status) {
                 StatusResponse.SUCCESS -> {
-                    runBlocking(Dispatchers.IO) {
-                        @Suppress("UNCHECKED_CAST")
-                        saveCallResult(response.body as RequestType)
-                    }
+                    saveCallResult(response.body as RequestType)
                     result.addSource(populateDataFromDb()) { dbData ->
-                        result.postValue(Resource.success(dbData))
+                        if (dbData != null) {
+                            result.postValue(Resource.success(dbData))
+                        }
                     }
                 }
+
                 StatusResponse.EMPTY -> {
                     result.addSource(populateDataFromDb()) { dbData ->
                         result.postValue(Resource.success(dbData))

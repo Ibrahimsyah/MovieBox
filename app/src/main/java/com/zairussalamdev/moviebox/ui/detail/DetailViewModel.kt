@@ -20,13 +20,13 @@ class DetailViewModel @Inject constructor(private val repository: TMDBRepository
 
     fun addMovieToFavorite(movieEntity: MovieEntity) {
         viewModelScope.launch {
-            repository.insertFavoriteMovie(movieEntity.id as Int)
+            repository.insertFavoriteMovie(movieEntity.id)
         }
     }
 
     fun deleteMovieFromFavorite(movieEntity: MovieEntity) {
         viewModelScope.launch {
-            repository.deleteFavoriteMovie(movieEntity.id as Int)
+            repository.deleteFavoriteMovie(movieEntity.id)
         }
     }
 }
