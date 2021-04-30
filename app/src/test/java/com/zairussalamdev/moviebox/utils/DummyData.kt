@@ -31,14 +31,15 @@ object DummyData {
 
     fun getDummyDetailData(): DetailEntity {
         return DetailEntity(
-                id = 1,
-                title = "name1",
-                overview = "overview1",
-                posterPath = "poster1",
-                voteAverage = 5.0,
-                tagLine = "tagLine",
-                homepage = "homepage",
-                status = "status"
+            id = 1,
+            title = "name1",
+            overview = "overview1",
+            posterPath = "poster1",
+            voteAverage = 5.0,
+            popularity = 123123.0,
+            tagLine = "tagLine",
+            homepage = "homepage",
+            status = "status"
         )
     }
 

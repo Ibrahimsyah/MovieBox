@@ -40,10 +40,13 @@ class MainActivityTest {
 
     @Test
     fun movie_detail_loaded_successfully() {
-        onView(withId(R.id.rv_movies)).check(matches(isDisplayed()))
-        onView(withId(R.id.rv_movies)).perform(
+        onView(withText("MOVIES")).perform(click())
+        onView(withId(R.id.rv_movies)).apply {
+            check(matches(isDisplayed()))
+            perform(
                 RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())
-        )
+            )
+        }
         check_detail_components()
     }
 
@@ -90,9 +93,13 @@ class MainActivityTest {
     @Test
     fun add_favorite_movie_and_check_if_it_exists_in_favorite_list() {
         val expectedErrorMessage = "No Data"
-        onView(withId(R.id.rv_movies)).perform(
+        onView(withText("MOVIES")).perform(click())
+        onView(withId(R.id.rv_movies)).apply {
+            check(matches(isDisplayed()))
+            perform(
                 RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())
-        )
+            )
+        }
         onView(withId(R.id.fab)).perform(click())
         onView(isRoot()).perform(pressBack())
         onView(withId(R.id.menu_favorite)).perform(click())
@@ -100,7 +107,7 @@ class MainActivityTest {
             check(matches(not(isDisplayed())))
         }
         onView(withId(R.id.rv_movies)).perform(
-                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())
+            RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())
         )
         onView(withId(R.id.fab)).perform(click())
         onView(isRoot()).perform(pressBack())
@@ -137,8 +144,9 @@ class MainActivityTest {
 
     @Test
     fun show_favorite_movie_detail() {
+        onView(withText("MOVIES")).perform(click())
         onView(withId(R.id.rv_movies)).perform(
-                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())
+            RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())
         )
         onView(withId(R.id.fab)).perform(click())
         onView(isRoot()).perform(pressBack())

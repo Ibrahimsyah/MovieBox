@@ -71,6 +71,7 @@ dependencies {
     implementation "io.coil-kt:coil:1.2.0"
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.paging:paging-runtime-ktx:2.1.2'
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.3.1"
 
     //Test
     testImplementation 'junit:junit:4.13.2'

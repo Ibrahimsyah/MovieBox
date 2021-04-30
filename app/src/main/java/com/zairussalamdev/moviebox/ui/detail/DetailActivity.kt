@@ -136,12 +136,12 @@ class DetailActivity : AppCompatActivity() {
 
     private fun mapDetailToMovie(detailEntity: DetailEntity, movieType: Int): MovieEntity {
         return MovieEntity(
-                detailEntity.id as Int,
-                detailEntity.overview,
-                detailEntity.title,
-                detailEntity.posterPath,
-                detailEntity.voteAverage,
-                movieType
+            detailEntity.id,
+            detailEntity.overview,
+            detailEntity.title,
+            detailEntity.posterPath,
+            detailEntity.voteAverage,
+            movieType
         )
     }
 }

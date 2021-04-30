@@ -87,6 +87,7 @@ class TMDBRepositoryTest {
         }
     }
 
+    @Test
     fun `get tv show detail success`() {
         testCoroutineRule.runBlockingTest {
             val id = 1
