@@ -1,7 +1,6 @@
 package com.zairussalamdev.moviebox.ui.detail
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -60,7 +59,6 @@ class DetailActivity : AppCompatActivity() {
         }
 
         data.observe(this, { detail ->
-            Log.d("hehe", "loading: ${detail.status}")
             when (detail.status) {
                 Status.SUCCESS -> {
                     hideErrorMessage()
