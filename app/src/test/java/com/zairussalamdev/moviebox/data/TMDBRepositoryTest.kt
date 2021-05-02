@@ -132,6 +132,28 @@ class TMDBRepositoryTest {
     }
 
     @Test
+    fun `add a movie to favorite`() {
+        testCoroutineRule.runBlockingTest {
+            val id = 1
+            `when`(localDataSource.addFavoriteMovie(id)).thenReturn(Unit)
+            tmdbRepository.insertFavoriteMovie(id)
+
+            verify(localDataSource).addFavoriteMovie(id)
+        }
+    }
+
+    @Test
+    fun `remove a movie from favorite`() {
+        testCoroutineRule.runBlockingTest {
+            val id = 1
+            `when`(localDataSource.deleteFavoriteMovie(id)).thenReturn(Unit)
+            tmdbRepository.deleteFavoriteMovie(id)
+
+            verify(localDataSource).deleteFavoriteMovie(id)
+        }
+    }
+
+    @Test
     fun checkMovieFavorite() {
         val expected = false
         val movieId = 1
