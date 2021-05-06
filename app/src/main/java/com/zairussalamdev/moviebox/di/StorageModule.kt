@@ -5,7 +5,7 @@ import androidx.room.Room
 import com.zairussalamdev.moviebox.configs.Constants
 import com.zairussalamdev.moviebox.data.local.database.MovieBoxDatabase
 import com.zairussalamdev.moviebox.data.local.database.MovieDao
-import com.zairussalamdev.moviebox.data.remote.responses.GenreConverter
+import com.zairussalamdev.moviebox.data.local.entities.GenreConverter
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton

@@ -1,4 +1,4 @@
-package com.zairussalamdev.moviebox.data.remote.responses
+package com.zairussalamdev.moviebox.data.local.entities
 
 import androidx.room.ProvidedTypeConverter
 import androidx.room.TypeConverter
