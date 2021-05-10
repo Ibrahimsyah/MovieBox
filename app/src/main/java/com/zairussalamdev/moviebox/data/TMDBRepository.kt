@@ -51,7 +51,7 @@ class TMDBRepository @Inject constructor(
                             movieType = Constants.TYPE_MOVIE,
                             id = movie.id
                         )
-                        launch(Dispatchers.IO) { localDataSource.insertMovie(entity) }
+                        launch { localDataSource.insertMovie(entity) }
                     }
                 }
             }
@@ -85,7 +85,7 @@ class TMDBRepository @Inject constructor(
                             movieType = Constants.TYPE_TV_SHOW,
                             id = movie.id
                         )
-                        launch(Dispatchers.IO) { localDataSource.insertMovie(entity) }
+                        launch { localDataSource.insertMovie(entity) }
                     }
                 }
             }
