@@ -1,6 +1,5 @@
 package com.zairussalamdev.moviebox.ui.favoritemovies
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,31 +7,24 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.zairussalamdev.moviebox.App
-import com.zairussalamdev.moviebox.configs.Constants
+import com.zairussalamdev.moviebox.core.configs.Constants
 import com.zairussalamdev.moviebox.databinding.FragmentMoviesBinding
 import com.zairussalamdev.moviebox.ui.adapter.PagedMovieAdapter
 import com.zairussalamdev.moviebox.ui.detail.DetailActivity
-import javax.inject.Inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavoriteMoviesFragment : Fragment() {
     companion object {
         const val MOVIE_TYPE = "MOVIE_TYPE"
     }
 
-    @Inject
-    lateinit var movieViewModel: FavoriteMoviesViewModel
+    private val movieViewModel: FavoriteMoviesViewModel by viewModel()
 
     private lateinit var binding: FragmentMoviesBinding
 
-    override fun onAttach(context: Context) {
-        (context.applicationContext as App).appComponent.inject(this)
-        super.onAttach(context)
-    }
-
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         binding = FragmentMoviesBinding.inflate(inflater)
         return binding.root

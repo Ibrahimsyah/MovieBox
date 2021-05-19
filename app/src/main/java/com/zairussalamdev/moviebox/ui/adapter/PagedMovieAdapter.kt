@@ -7,9 +7,9 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.zairussalamdev.moviebox.data.local.entities.MovieEntity
+import com.zairussalamdev.moviebox.core.data.source.local.entities.MovieEntity
+import com.zairussalamdev.moviebox.core.utils.ImageNetwork
 import com.zairussalamdev.moviebox.databinding.ItemMovieBinding
-import com.zairussalamdev.moviebox.utils.ImageNetwork
 
 class PagedMovieAdapter(
         private val listener: (movie: MovieEntity) -> Unit

@@ -4,12 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.paging.PagedList
-import com.zairussalamdev.moviebox.data.TMDBRepository
-import com.zairussalamdev.moviebox.data.local.entities.MovieEntity
-import javax.inject.Inject
+import com.zairussalamdev.moviebox.core.data.TMDBRepository
+import com.zairussalamdev.moviebox.core.data.source.local.entities.MovieEntity
 
-class FavoriteMoviesViewModel @Inject constructor(private val repository: TMDBRepository) :
-        ViewModel() {
+class FavoriteMoviesViewModel constructor(private val repository: TMDBRepository) : ViewModel() {
     private val errorMessage = MutableLiveData<String>()
 
     fun getErrorMessage(): LiveData<String> = errorMessage

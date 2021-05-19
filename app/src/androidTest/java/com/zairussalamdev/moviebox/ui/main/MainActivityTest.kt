@@ -10,7 +10,7 @@ import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.zairussalamdev.moviebox.R
-import com.zairussalamdev.moviebox.utils.IdlingResource
+import com.zairussalamdev.moviebox.core.utils.IdlingResource
 import org.hamcrest.Matchers.not
 import org.junit.After
 import org.junit.Before

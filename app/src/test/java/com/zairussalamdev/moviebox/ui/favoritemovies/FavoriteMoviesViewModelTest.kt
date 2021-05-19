@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.paging.PagedList
 import com.nhaarman.mockitokotlin2.verify
-import com.zairussalamdev.moviebox.data.TMDBRepository
-import com.zairussalamdev.moviebox.data.local.entities.MovieEntity
+import com.zairussalamdev.moviebox.core.data.TMDBRepository
+import com.zairussalamdev.moviebox.core.data.source.local.entities.MovieEntity
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotNull
 import org.junit.Before

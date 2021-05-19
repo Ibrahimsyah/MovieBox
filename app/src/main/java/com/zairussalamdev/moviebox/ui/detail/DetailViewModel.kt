@@ -3,12 +3,11 @@ package com.zairussalamdev.moviebox.ui.detail
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.zairussalamdev.moviebox.data.TMDBRepository
-import com.zairussalamdev.moviebox.data.local.entities.MovieEntity
+import com.zairussalamdev.moviebox.core.data.TMDBRepository
+import com.zairussalamdev.moviebox.core.data.source.local.entities.MovieEntity
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class DetailViewModel @Inject constructor(private val repository: TMDBRepository) : ViewModel() {
+class DetailViewModel constructor(private val repository: TMDBRepository) : ViewModel() {
 
     fun getMovieDetail(id: Int) = repository.getMovieDetail(id)
 

@@ -1,6 +1,5 @@
 package com.zairussalamdev.moviebox.ui.movies
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,28 +7,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.zairussalamdev.moviebox.App
-import com.zairussalamdev.moviebox.configs.Constants
+import com.zairussalamdev.moviebox.core.configs.Constants
+import com.zairussalamdev.moviebox.core.data.Resource
 import com.zairussalamdev.moviebox.databinding.FragmentMoviesBinding
 import com.zairussalamdev.moviebox.ui.adapter.PagedMovieAdapter
 import com.zairussalamdev.moviebox.ui.detail.DetailActivity
-import com.zairussalamdev.moviebox.vo.Status
-import javax.inject.Inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MovieFragment : Fragment() {
     companion object {
         const val MOVIE_TYPE = "MOVIE_TYPE"
     }
 
-    @Inject
-    lateinit var movieViewModel: MovieViewModel
+    private val movieViewModel: MovieViewModel by viewModel()
 
     private lateinit var binding: FragmentMoviesBinding
-
-    override fun onAttach(context: Context) {
-        (context.applicationContext as App).appComponent.inject(this)
-        super.onAttach(context)
-    }
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -63,16 +55,16 @@ class MovieFragment : Fragment() {
         }
 
         data.observe(viewLifecycleOwner, {
-            when (it.status) {
-                Status.SUCCESS -> {
+            when (it) {
+                is Resource.Success -> {
                     adapter.submitList(it.data)
                     hideErrorMessage()
                     showLoading(false)
                 }
-                Status.LOADING -> {
+                is Resource.Loading -> {
                     showLoading(true)
                 }
-                Status.ERROR -> {
+                is Resource.Error -> {
                     showErrorMessage(it.message as String)
                     showLoading(false)
                 }
