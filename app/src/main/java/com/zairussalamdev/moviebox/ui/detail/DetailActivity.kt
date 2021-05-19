@@ -128,6 +128,7 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun showLoading(state: Boolean) {
+        binding.fab.visibility = if (state) View.GONE else View.VISIBLE
         binding.progressBar.visibility = if (state) View.VISIBLE else View.GONE
     }
 

@@ -25,7 +25,7 @@ class DetailViewModel constructor(private val useCase: MovieUseCase) : ViewModel
 
     fun deleteMovieFromFavorite(movie: Movie) {
         viewModelScope.launch {
-            useCase.addMovieToFavorite(movie.id)
+            useCase.removeMovieFromFavorite(movie.id)
         }
     }
 }

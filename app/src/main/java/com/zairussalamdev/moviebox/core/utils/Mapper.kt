@@ -53,7 +53,8 @@ object Mapper {
         }
     }
 
-    fun detailEntityToDomain(entity: DetailEntity): Detail {
+    fun detailEntityToDomain(entity: DetailEntity?): Detail? {
+        if (entity == null) return null
         val genres = entity.genres.map { Genre(it) }
         return Detail(
             entity.overview,
@@ -69,7 +70,7 @@ object Mapper {
         )
     }
 
-    fun detailResponseToEntity(response: DetailResponse): DetailEntity {
+    fun detailResponseToEntity(response: DetailResponse, movieType: Int): DetailEntity {
         val genres = response.genreResponses.map { it.name }
         return DetailEntity(
             response.id,
@@ -81,7 +82,8 @@ object Mapper {
             response.tagLine,
             genres,
             response.homepage,
-            response.status
+            response.status,
+            movieType
         )
     }
 }

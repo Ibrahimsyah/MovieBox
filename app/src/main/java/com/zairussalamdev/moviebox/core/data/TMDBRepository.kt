@@ -3,6 +3,7 @@ package com.zairussalamdev.moviebox.core.data
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
+import com.zairussalamdev.moviebox.core.configs.Constants
 import com.zairussalamdev.moviebox.core.data.source.local.LocalDataSource
 import com.zairussalamdev.moviebox.core.data.source.remote.RemoteDataSource
 import com.zairussalamdev.moviebox.core.data.source.remote.network.ApiResponse
@@ -82,7 +83,7 @@ class TMDBRepository constructor(
     override fun getMovieDetail(id: Int): LiveData<Resource<Detail>> {
         return object : NetworkBoundResource<Detail, DetailResponse>() {
             override fun populateDataFromDb(): LiveData<Detail> {
-                return Transformations.map(localDataSource.getTvShowDetail(id)) {
+                return Transformations.map(localDataSource.getMovieDetail(id)) {
                     Mapper.detailEntityToDomain(it)
                 }
             }
@@ -100,8 +101,8 @@ class TMDBRepository constructor(
             }
 
             override fun saveCallResult(data: DetailResponse) {
+                val detail = Mapper.detailResponseToEntity(data, Constants.TYPE_MOVIE)
                 CoroutineScope(Dispatchers.Main).launch {
-                    val detail = Mapper.detailResponseToEntity(data)
                     localDataSource.insertDetailMovie(detail)
                 }
             }
@@ -129,8 +130,8 @@ class TMDBRepository constructor(
             }
 
             override fun saveCallResult(data: DetailResponse) {
+                val detail = Mapper.detailResponseToEntity(data, Constants.TYPE_TV_SHOW)
                 CoroutineScope(Dispatchers.Main).launch {
-                    val detail = Mapper.detailResponseToEntity(data)
                     localDataSource.insertDetailMovie(detail)
                 }
             }
