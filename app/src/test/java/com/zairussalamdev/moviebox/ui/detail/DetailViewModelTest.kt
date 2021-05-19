@@ -4,11 +4,11 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.verify
-import com.zairussalamdev.moviebox.data.TMDBRepository
-import com.zairussalamdev.moviebox.data.local.entities.DetailEntity
-import com.zairussalamdev.moviebox.utils.DummyData
-import com.zairussalamdev.moviebox.utils.TestCoroutineRule
-import com.zairussalamdev.moviebox.vo.Resource
+import com.zairussalamdev.moviebox.core.data.Resource
+import com.zairussalamdev.moviebox.core.data.TMDBRepository
+import com.zairussalamdev.moviebox.core.data.source.local.entities.DetailEntity
+import com.zairussalamdev.moviebox.core.utils.DummyData
+import com.zairussalamdev.moviebox.core.utils.TestCoroutineRule
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi

@@ -4,11 +4,10 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.paging.PagedList
-import com.zairussalamdev.moviebox.data.TMDBRepository
-import com.zairussalamdev.moviebox.data.local.entities.MovieEntity
-import com.zairussalamdev.moviebox.utils.TestCoroutineRule
-import com.zairussalamdev.moviebox.vo.Resource
-import com.zairussalamdev.moviebox.vo.Status
+import com.zairussalamdev.moviebox.core.data.Resource
+import com.zairussalamdev.moviebox.core.data.TMDBRepository
+import com.zairussalamdev.moviebox.core.data.source.local.entities.MovieEntity
+import com.zairussalamdev.moviebox.core.utils.TestCoroutineRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import okhttp3.ResponseBody
 import org.junit.Assert.assertEquals

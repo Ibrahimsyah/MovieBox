@@ -6,16 +6,15 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
-import com.zairussalamdev.moviebox.App
 import com.zairussalamdev.moviebox.R
-import com.zairussalamdev.moviebox.configs.Constants
-import com.zairussalamdev.moviebox.data.local.entities.DetailEntity
-import com.zairussalamdev.moviebox.data.local.entities.MovieEntity
+import com.zairussalamdev.moviebox.core.configs.Constants
+import com.zairussalamdev.moviebox.core.data.Resource
+import com.zairussalamdev.moviebox.core.data.source.local.entities.DetailEntity
+import com.zairussalamdev.moviebox.core.data.source.local.entities.MovieEntity
+import com.zairussalamdev.moviebox.core.utils.ImageNetwork
 import com.zairussalamdev.moviebox.databinding.ActivityDetailBinding
 import com.zairussalamdev.moviebox.ui.adapter.MovieGenreAdapter
-import com.zairussalamdev.moviebox.utils.ImageNetwork
-import com.zairussalamdev.moviebox.vo.Status
-import javax.inject.Inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class DetailActivity : AppCompatActivity() {
 
@@ -24,15 +23,13 @@ class DetailActivity : AppCompatActivity() {
         const val MOVIE_TYPE = "MOVIE_TYPE"
     }
 
-    @Inject
-    lateinit var detailViewModel: DetailViewModel
+    private val detailViewModel: DetailViewModel by viewModel()
 
     private lateinit var binding: ActivityDetailBinding
     private lateinit var detailEntity: DetailEntity
     private lateinit var genreAdapter: MovieGenreAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        (applicationContext as App).appComponent.inject(this)
         super.onCreate(savedInstanceState)
 
         binding = ActivityDetailBinding.inflate(layoutInflater)
@@ -59,17 +56,17 @@ class DetailActivity : AppCompatActivity() {
         }
 
         data.observe(this, { detail ->
-            when (detail.status) {
-                Status.SUCCESS -> {
+            when (detail) {
+                is Resource.Success -> {
                     hideErrorMessage()
                     showLoading(false)
                     showData(detail.data)
                     detailEntity = detail.data as DetailEntity
                 }
-                Status.LOADING -> {
+                is Resource.Loading -> {
                     showLoading(true)
                 }
-                Status.ERROR -> {
+                is Resource.Error -> {
                     showLoading(false)
                     showErrorMessage(detail.message as String)
                 }

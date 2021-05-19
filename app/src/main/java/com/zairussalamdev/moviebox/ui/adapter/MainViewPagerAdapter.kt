@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.zairussalamdev.moviebox.configs.Constants
+import com.zairussalamdev.moviebox.core.configs.Constants
 import com.zairussalamdev.moviebox.ui.movies.MovieFragment
 
 class MainViewPagerAdapter(activity: AppCompatActivity) : FragmentStateAdapter(activity) {
