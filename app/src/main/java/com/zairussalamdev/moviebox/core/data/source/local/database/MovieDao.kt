@@ -1,9 +1,9 @@
 package com.zairussalamdev.moviebox.core.data.source.local.database
 
 import androidx.lifecycle.LiveData
-import androidx.paging.DataSource
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.zairussalamdev.moviebox.core.configs.Constants
 import com.zairussalamdev.moviebox.core.data.source.local.entities.DetailEntity
@@ -12,10 +12,10 @@ import com.zairussalamdev.moviebox.core.data.source.local.entities.MovieEntity
 @Dao
 interface MovieDao {
     @Query("select * from movies where movieType = ${Constants.TYPE_MOVIE}")
-    fun getMovies(): DataSource.Factory<Int, MovieEntity>
+    fun getMovies(): LiveData<List<MovieEntity>>
 
     @Query("select * from movies where movieType = ${Constants.TYPE_TV_SHOW}")
-    fun getTvShows(): DataSource.Factory<Int, MovieEntity>
+    fun getTvShows(): LiveData<List<MovieEntity>>
 
     @Query("select * from details where movie_id = :movieId and movieType = ${Constants.TYPE_MOVIE}")
     fun getMovieDetail(movieId: Int): LiveData<DetailEntity>
@@ -23,16 +23,16 @@ interface MovieDao {
     @Query("select * from details where movie_id = :tvShowId and movieType = ${Constants.TYPE_TV_SHOW}")
     fun getTvShowDetail(tvShowId: Int): LiveData<DetailEntity>
 
-    @Query("select * from movies where movieType= ${Constants.TYPE_MOVIE} and isFavorite = 1")
-    fun getFavoriteMovies(): DataSource.Factory<Int, MovieEntity>
+    @Query("select * from movies where movieType = ${Constants.TYPE_MOVIE} and isFavorite = 1")
+    fun getFavoriteMovies(): LiveData<List<MovieEntity>>
 
-    @Query("select * from movies where movieType= ${Constants.TYPE_TV_SHOW} and isFavorite = 1")
-    fun getFavoriteTvShows(): DataSource.Factory<Int, MovieEntity>
+    @Query("select * from movies where movieType = ${Constants.TYPE_TV_SHOW} and isFavorite = 1")
+    fun getFavoriteTvShows(): LiveData<List<MovieEntity>>
 
-    @Insert
-    fun insertMovie(movie: MovieEntity)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertMovie(movies: List<MovieEntity>)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertDetail(movieDetail: DetailEntity)
 
     @Query("update movies set isFavorite = 1 where id = :id")

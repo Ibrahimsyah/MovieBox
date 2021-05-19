@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.zairussalamdev.moviebox.core.configs.Constants
 import com.zairussalamdev.moviebox.core.data.Resource
 import com.zairussalamdev.moviebox.databinding.FragmentMoviesBinding
-import com.zairussalamdev.moviebox.ui.adapter.PagedMovieAdapter
+import com.zairussalamdev.moviebox.ui.adapter.MovieAdapter
 import com.zairussalamdev.moviebox.ui.detail.DetailActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -36,7 +36,7 @@ class MovieFragment : Fragment() {
 
         val movieType = arguments?.getInt(MOVIE_TYPE)
 
-        val adapter = PagedMovieAdapter {
+        val adapter = MovieAdapter {
             val intent = Intent(context, DetailActivity::class.java)
             intent.putExtra(DetailActivity.MOVIE_ID, it.id)
             intent.putExtra(DetailActivity.MOVIE_TYPE, movieType)
@@ -57,7 +57,7 @@ class MovieFragment : Fragment() {
         data.observe(viewLifecycleOwner, {
             when (it) {
                 is Resource.Success -> {
-                    adapter.submitList(it.data)
+                    adapter.setMovies(it.data)
                     hideErrorMessage()
                     showLoading(false)
                 }

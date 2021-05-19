@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.verify
 import com.zairussalamdev.moviebox.core.data.Resource
-import com.zairussalamdev.moviebox.core.data.TMDBRepository
-import com.zairussalamdev.moviebox.core.data.source.local.entities.DetailEntity
+import com.zairussalamdev.moviebox.core.domain.model.Detail
+import com.zairussalamdev.moviebox.core.domain.usecase.MovieUseCase
 import com.zairussalamdev.moviebox.core.utils.DummyData
 import com.zairussalamdev.moviebox.core.utils.TestCoroutineRule
 import junit.framework.TestCase.assertEquals
@@ -34,10 +34,10 @@ class DetailViewModelTest {
     val testCoroutineRule = TestCoroutineRule()
 
     @Mock
-    private lateinit var tmdbRepository: TMDBRepository
+    private lateinit var movieInteractor: MovieUseCase
 
     @Mock
-    private lateinit var observer: Observer<Resource<DetailEntity>>
+    private lateinit var observer: Observer<Resource<Detail>>
 
     @Mock
     private lateinit var isFavoriteObserver: Observer<Boolean>
@@ -50,7 +50,7 @@ class DetailViewModelTest {
 
     @Before
     fun init() {
-        detailViewModel = DetailViewModel(tmdbRepository)
+        detailViewModel = DetailViewModel(movieInteractor)
         val responseBody = Response.error<Error>(500, ResponseBody.create(null, "".toByteArray()))
         responseHttpError = HttpException(responseBody)
     }
@@ -59,14 +59,14 @@ class DetailViewModelTest {
     fun `get movie detail success`() {
         testCoroutineRule.runBlockingTest {
             val movieId = 1
-            val resource = Resource.success(dummyDetail)
-            val expectation = MutableLiveData<Resource<DetailEntity>>()
+            val resource = Resource.Success(dummyDetail)
+            val expectation = MutableLiveData<Resource<Detail>>()
             expectation.value = resource
-            `when`(tmdbRepository.getMovieDetail(movieId)).thenReturn(expectation)
+            `when`(movieInteractor.getMovieDetail(movieId)).thenReturn(expectation)
 
             val result = detailViewModel.getMovieDetail(movieId)
             result.observeForever(observer)
-            verify(tmdbRepository).getMovieDetail(movieId)
+            verify(movieInteractor).getMovieDetail(movieId)
 
             assertNotNull(result)
             observer.onChanged(resource)
@@ -77,15 +77,15 @@ class DetailViewModelTest {
     fun `get tv show detail success`() {
         testCoroutineRule.runBlockingTest {
             val movieId = 1
-            val resource = Resource.success(dummyDetail)
-            val expectation = MutableLiveData<Resource<DetailEntity>>()
+            val resource = Resource.Success(dummyDetail)
+            val expectation = MutableLiveData<Resource<Detail>>()
             expectation.value = resource
-            `when`(tmdbRepository.getTvShowDetail(movieId)).thenReturn(expectation)
+            `when`(movieInteractor.getTvShowDetail(movieId)).thenReturn(expectation)
 
             val result = detailViewModel.getTvShowDetail(movieId)
             assertNotNull(result)
 
-            verify(tmdbRepository).getTvShowDetail(movieId)
+            verify(movieInteractor).getTvShowDetail(movieId)
             detailViewModel.getTvShowDetail(movieId).observeForever(observer)
             observer.onChanged(resource)
         }
@@ -96,11 +96,11 @@ class DetailViewModelTest {
         val movieId = 1
         val expectation = MutableLiveData<Boolean>()
         expectation.value = false
-        `when`(tmdbRepository.checkMovieFavorite(movieId)).thenReturn(expectation)
+        `when`(movieInteractor.checkMovieFavorite(movieId)).thenReturn(expectation)
 
         val result = detailViewModel.checkIsMovieFavorite(movieId)
         result.observeForever(isFavoriteObserver)
-        verify(tmdbRepository).checkMovieFavorite(movieId)
+        verify(movieInteractor).checkMovieFavorite(movieId)
         verify(isFavoriteObserver).onChanged(expectation.value)
 
         assertNotNull(result.value)
@@ -111,9 +111,9 @@ class DetailViewModelTest {
     fun `add a movie to favorite`() {
         testCoroutineRule.runBlockingTest {
             val id = 1
-            `when`(tmdbRepository.insertFavoriteMovie(id)).thenReturn(Unit)
+            `when`(movieInteractor.addMovieToFavorite(id)).thenReturn(Unit)
             detailViewModel.addMovieToFavorite(dummyEntity)
-            verify(tmdbRepository).insertFavoriteMovie(id)
+            verify(movieInteractor).addMovieToFavorite(id)
         }
     }
 
@@ -121,9 +121,9 @@ class DetailViewModelTest {
     fun `remove a movie from favorite`() {
         testCoroutineRule.runBlockingTest {
             val id = 1
-            `when`(tmdbRepository.deleteFavoriteMovie(id)).thenReturn(Unit)
+            `when`(movieInteractor.removeMovieFromFavorite(id)).thenReturn(Unit)
             detailViewModel.deleteMovieFromFavorite(dummyEntity)
-            verify(tmdbRepository).deleteFavoriteMovie(id)
+            verify(movieInteractor).removeMovieFromFavorite(id)
         }
     }
 }

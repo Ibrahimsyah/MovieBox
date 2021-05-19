@@ -2,31 +2,29 @@ package com.zairussalamdev.moviebox.ui.favoritemovies
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import androidx.paging.PagedList
-import com.zairussalamdev.moviebox.core.data.TMDBRepository
-import com.zairussalamdev.moviebox.core.data.source.local.entities.MovieEntity
+import com.zairussalamdev.moviebox.core.domain.model.Movie
+import com.zairussalamdev.moviebox.core.domain.usecase.MovieUseCase
 
-class FavoriteMoviesViewModel constructor(private val repository: TMDBRepository) : ViewModel() {
+class FavoriteMoviesViewModel constructor(private val useCase: MovieUseCase) : ViewModel() {
     private val errorMessage = MutableLiveData<String>()
 
     fun getErrorMessage(): LiveData<String> = errorMessage
 
-    fun getFavoriteMovieList(): LiveData<PagedList<MovieEntity>> {
-        val result = repository.getFavoriteMovies()
-        result.observeForever {
+    fun getFavoriteMovieList(): LiveData<List<Movie>> {
+        return Transformations.map(useCase.getFavoriteMovies()) {
             val message = if (it.isEmpty()) "No Data" else ""
             errorMessage.postValue(message)
+            it
         }
-        return result
     }
 
-    fun getFavoriteTvShowList(): LiveData<PagedList<MovieEntity>> {
-        val result = repository.getFavoriteTvShows()
-        result.observeForever {
+    fun getFavoriteTvShowList(): LiveData<List<Movie>> {
+        return Transformations.map(useCase.getFavoriteTvShows()) {
             val message = if (it.isEmpty()) "No Data" else ""
             errorMessage.postValue(message)
+            it
         }
-        return result
     }
 }

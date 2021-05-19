@@ -11,14 +11,14 @@ data class DetailEntity(
     @ColumnInfo(name = "movie_id")
     val id: Int,
 
-    val overview: String?,
-    val title: String?,
-    val posterPath: String?,
-    val voteAverage: Double?,
-    val popularity: Double?,
-    val tagLine: String?,
-    val genres: List<String> = listOf(),
-    val homepage: String?,
-    val status: String?,
+    val overview: String,
+    val title: String,
+    val posterPath: String,
+    val voteAverage: Double,
+    val popularity: Double,
+    val tagLine: String,
+    val genres: List<String>,
+    val homepage: String,
+    val status: String,
     val movieType: Int = Constants.TYPE_MOVIE
 )

@@ -1,7 +1,6 @@
 package com.zairussalamdev.moviebox.core.data.source.local
 
 import androidx.lifecycle.LiveData
-import androidx.paging.DataSource
 import com.zairussalamdev.moviebox.core.data.source.local.database.MovieDao
 import com.zairussalamdev.moviebox.core.data.source.local.entities.DetailEntity
 import com.zairussalamdev.moviebox.core.data.source.local.entities.MovieEntity
@@ -9,15 +8,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class LocalDataSource constructor(private val movieDao: MovieDao) {
-    suspend fun insertMovie(movie: MovieEntity) {
-        withContext(Dispatchers.IO) { movieDao.insertMovie(movie) }
+    suspend fun insertMovie(movies: List<MovieEntity>) {
+        withContext(Dispatchers.IO) { movieDao.insertMovie(movies) }
     }
 
     suspend fun insertDetailMovie(movieDetail: DetailEntity) {
         withContext(Dispatchers.IO) { movieDao.insertDetail(movieDetail) }
     }
 
-    fun getMovies(): DataSource.Factory<Int, MovieEntity> {
+    fun getMovies(): LiveData<List<MovieEntity>> {
         return movieDao.getMovies()
     }
 
@@ -25,7 +24,7 @@ class LocalDataSource constructor(private val movieDao: MovieDao) {
         return movieDao.getMovieDetail(movieId)
     }
 
-    fun getTvShows(): DataSource.Factory<Int, MovieEntity> {
+    fun getTvShows(): LiveData<List<MovieEntity>> {
         return movieDao.getTvShows()
     }
 
@@ -33,11 +32,11 @@ class LocalDataSource constructor(private val movieDao: MovieDao) {
         return movieDao.getTvShowDetail(tvShowId)
     }
 
-    fun getFavoriteMovies(): DataSource.Factory<Int, MovieEntity> {
+    fun getFavoriteMovies(): LiveData<List<MovieEntity>> {
         return movieDao.getFavoriteMovies()
     }
 
-    fun getFavoriteTvShows(): DataSource.Factory<Int, MovieEntity> {
+    fun getFavoriteTvShows(): LiveData<List<MovieEntity>> {
         return movieDao.getFavoriteTvShows()
     }
 

@@ -2,17 +2,18 @@ package com.zairussalamdev.moviebox.core.data
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.paging.PagedList
-import androidx.paging.toLiveData
+import androidx.lifecycle.Transformations
 import com.zairussalamdev.moviebox.core.configs.Constants
 import com.zairussalamdev.moviebox.core.data.source.local.LocalDataSource
-import com.zairussalamdev.moviebox.core.data.source.local.entities.DetailEntity
-import com.zairussalamdev.moviebox.core.data.source.local.entities.MovieEntity
 import com.zairussalamdev.moviebox.core.data.source.remote.RemoteDataSource
 import com.zairussalamdev.moviebox.core.data.source.remote.network.ApiResponse
 import com.zairussalamdev.moviebox.core.data.source.remote.responses.DetailResponse
-import com.zairussalamdev.moviebox.core.data.source.remote.responses.MovieResponse
-import com.zairussalamdev.moviebox.core.data.source.remote.responses.TvShowResponse
+import com.zairussalamdev.moviebox.core.data.source.remote.responses.ListMovieResponse
+import com.zairussalamdev.moviebox.core.data.source.remote.responses.ListTvShowResponse
+import com.zairussalamdev.moviebox.core.domain.model.Detail
+import com.zairussalamdev.moviebox.core.domain.model.Movie
+import com.zairussalamdev.moviebox.core.domain.repository.ITMDBRepository
+import com.zairussalamdev.moviebox.core.utils.Mapper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -20,15 +21,19 @@ import kotlinx.coroutines.launch
 class TMDBRepository constructor(
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource,
-) : MovieDataSource {
-    override fun getMovieList(): LiveData<Resource<PagedList<MovieEntity>>> {
-        return object : NetworkBoundResource<PagedList<MovieEntity>, MovieResponse>() {
-            override fun populateDataFromDb() = localDataSource.getMovies().toLiveData(4)
+) : ITMDBRepository {
+    override fun getMovieList(): LiveData<Resource<List<Movie>>> {
+        return object : NetworkBoundResource<List<Movie>, ListMovieResponse>() {
+            override fun populateDataFromDb(): LiveData<List<Movie>> {
+                return Transformations.map(localDataSource.getMovies()) {
+                    Mapper.movieEntitiesToDomain(it)
+                }
+            }
 
-            override fun shouldFetch(data: PagedList<MovieEntity>?) = data.isNullOrEmpty()
+            override fun shouldFetch(data: List<Movie>?) = data.isNullOrEmpty()
 
-            override fun networkCall(): LiveData<ApiResponse<MovieResponse>> {
-                val result = MutableLiveData<ApiResponse<MovieResponse>>()
+            override fun networkCall(): LiveData<ApiResponse<ListMovieResponse>> {
+                val result = MutableLiveData<ApiResponse<ListMovieResponse>>()
                 CoroutineScope(Dispatchers.Main).launch {
                     remoteDataSource.getMovieList().observeForever {
                         result.postValue(it)
@@ -37,32 +42,27 @@ class TMDBRepository constructor(
                 return result
             }
 
-            override fun saveCallResult(data: MovieResponse) {
+            override fun saveCallResult(data: ListMovieResponse) {
                 CoroutineScope(Dispatchers.Main).launch {
-                    data.movies.forEach { movie ->
-                        val entity = MovieEntity(
-                            overview = movie.overview,
-                            title = movie.title,
-                            posterPath = movie.posterPath,
-                            voteAverage = movie.voteAverage,
-                            movieType = Constants.TYPE_MOVIE,
-                            id = movie.id
-                        )
-                        launch { localDataSource.insertMovie(entity) }
-                    }
+                    val mappedData = Mapper.movieResponsesToEntities(data)
+                    launch { localDataSource.insertMovie(mappedData) }
                 }
             }
         }.asLiveData()
     }
 
-    override fun getTvShowsList(): LiveData<Resource<PagedList<MovieEntity>>> {
-        return object : NetworkBoundResource<PagedList<MovieEntity>, TvShowResponse>() {
-            override fun populateDataFromDb() = localDataSource.getTvShows().toLiveData(4)
+    override fun getTvShowsList(): LiveData<Resource<List<Movie>>> {
+        return object : NetworkBoundResource<List<Movie>, ListTvShowResponse>() {
+            override fun populateDataFromDb(): LiveData<List<Movie>> {
+                return Transformations.map(localDataSource.getTvShows()) {
+                    Mapper.movieEntitiesToDomain(it)
+                }
+            }
 
-            override fun shouldFetch(data: PagedList<MovieEntity>?) = data.isNullOrEmpty()
+            override fun shouldFetch(data: List<Movie>?) = data.isNullOrEmpty()
 
-            override fun networkCall(): LiveData<ApiResponse<TvShowResponse>> {
-                val result = MutableLiveData<ApiResponse<TvShowResponse>>()
+            override fun networkCall(): LiveData<ApiResponse<ListTvShowResponse>> {
+                val result = MutableLiveData<ApiResponse<ListTvShowResponse>>()
                 CoroutineScope(Dispatchers.Main).launch {
                     remoteDataSource.getTvShowList().observeForever {
                         result.postValue(it)
@@ -71,29 +71,24 @@ class TMDBRepository constructor(
                 return result
             }
 
-            override fun saveCallResult(data: TvShowResponse) {
+            override fun saveCallResult(data: ListTvShowResponse) {
                 CoroutineScope(Dispatchers.Main).launch {
-                    data.tvShows.forEach { movie ->
-                        val entity = MovieEntity(
-                            overview = movie.overview,
-                            title = movie.name,
-                            posterPath = movie.posterPath,
-                            voteAverage = movie.voteAverage,
-                            movieType = Constants.TYPE_TV_SHOW,
-                            id = movie.id
-                        )
-                        launch { localDataSource.insertMovie(entity) }
-                    }
+                    val mapped = Mapper.tvShowResponsesToEntities(data)
+                    localDataSource.insertMovie(mapped)
                 }
             }
         }.asLiveData()
     }
 
-    override fun getMovieDetail(id: Int): LiveData<Resource<DetailEntity>> {
-        return object : NetworkBoundResource<DetailEntity, DetailResponse>() {
-            override fun populateDataFromDb() = localDataSource.getMovieDetail(id)
+    override fun getMovieDetail(id: Int): LiveData<Resource<Detail>> {
+        return object : NetworkBoundResource<Detail, DetailResponse>() {
+            override fun populateDataFromDb(): LiveData<Detail> {
+                return Transformations.map(localDataSource.getMovieDetail(id)) {
+                    Mapper.detailEntityToDomain(it)
+                }
+            }
 
-            override fun shouldFetch(data: DetailEntity?) = data == null
+            override fun shouldFetch(data: Detail?) = data == null
 
             override fun networkCall(): LiveData<ApiResponse<DetailResponse>> {
                 val result = MutableLiveData<ApiResponse<DetailResponse>>()
@@ -106,32 +101,23 @@ class TMDBRepository constructor(
             }
 
             override fun saveCallResult(data: DetailResponse) {
+                val detail = Mapper.detailResponseToEntity(data, Constants.TYPE_MOVIE)
                 CoroutineScope(Dispatchers.Main).launch {
-                    val genres = data.genres.map { genre -> genre.name }
-                    val detail = DetailEntity(
-                        data.id,
-                        data.overview,
-                        data.title,
-                        data.posterPath,
-                        data.voteAverage,
-                        data.popularity,
-                        data.tagLine,
-                        genres,
-                        data.homepage,
-                        data.status,
-                        Constants.TYPE_MOVIE
-                    )
                     localDataSource.insertDetailMovie(detail)
                 }
             }
         }.asLiveData()
     }
 
-    override fun getTvShowDetail(id: Int): LiveData<Resource<DetailEntity>> {
-        return object : NetworkBoundResource<DetailEntity, DetailResponse>() {
-            override fun populateDataFromDb() = localDataSource.getTvShowDetail(id)
+    override fun getTvShowDetail(id: Int): LiveData<Resource<Detail>> {
+        return object : NetworkBoundResource<Detail, DetailResponse>() {
+            override fun populateDataFromDb(): LiveData<Detail> {
+                return Transformations.map(localDataSource.getTvShowDetail(id)) {
+                    Mapper.detailEntityToDomain(it)
+                }
+            }
 
-            override fun shouldFetch(data: DetailEntity?) = data == null
+            override fun shouldFetch(data: Detail?) = data == null
 
             override fun networkCall(): LiveData<ApiResponse<DetailResponse>> {
                 val result = MutableLiveData<ApiResponse<DetailResponse>>()
@@ -144,21 +130,8 @@ class TMDBRepository constructor(
             }
 
             override fun saveCallResult(data: DetailResponse) {
+                val detail = Mapper.detailResponseToEntity(data, Constants.TYPE_TV_SHOW)
                 CoroutineScope(Dispatchers.Main).launch {
-                    val genres = data.genres.map { genre -> genre.name }
-                    val detail = DetailEntity(
-                        data.id,
-                        data.overview,
-                        data.title,
-                        data.posterPath,
-                        data.voteAverage,
-                        data.popularity,
-                        data.tagLine,
-                        genres,
-                        data.homepage,
-                        data.status,
-                        Constants.TYPE_TV_SHOW
-                    )
                     localDataSource.insertDetailMovie(detail)
                 }
             }
@@ -166,12 +139,17 @@ class TMDBRepository constructor(
         }.asLiveData()
     }
 
-    override fun getFavoriteMovies(): LiveData<PagedList<MovieEntity>> {
-        return localDataSource.getFavoriteMovies().toLiveData(4)
+    override fun getFavoriteMovies(): LiveData<List<Movie>> {
+        return Transformations.map(localDataSource.getFavoriteMovies()) {
+            Mapper.movieEntitiesToDomain(it)
+
+        }
     }
 
-    override fun getFavoriteTvShows(): LiveData<PagedList<MovieEntity>> {
-        return localDataSource.getFavoriteTvShows().toLiveData(4)
+    override fun getFavoriteTvShows(): LiveData<List<Movie>> {
+        return Transformations.map(localDataSource.getFavoriteTvShows()) {
+            Mapper.movieEntitiesToDomain(it)
+        }
     }
 
     override fun checkMovieFavorite(id: Int): LiveData<Boolean> {

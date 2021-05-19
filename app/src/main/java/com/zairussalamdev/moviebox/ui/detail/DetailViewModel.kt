@@ -3,29 +3,29 @@ package com.zairussalamdev.moviebox.ui.detail
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.zairussalamdev.moviebox.core.data.TMDBRepository
-import com.zairussalamdev.moviebox.core.data.source.local.entities.MovieEntity
+import com.zairussalamdev.moviebox.core.domain.model.Movie
+import com.zairussalamdev.moviebox.core.domain.usecase.MovieUseCase
 import kotlinx.coroutines.launch
 
-class DetailViewModel constructor(private val repository: TMDBRepository) : ViewModel() {
+class DetailViewModel constructor(private val useCase: MovieUseCase) : ViewModel() {
 
-    fun getMovieDetail(id: Int) = repository.getMovieDetail(id)
+    fun getMovieDetail(id: Int) = useCase.getMovieDetail(id)
 
-    fun getTvShowDetail(id: Int) = repository.getTvShowDetail(id)
+    fun getTvShowDetail(id: Int) = useCase.getTvShowDetail(id)
 
     fun checkIsMovieFavorite(id: Int): LiveData<Boolean> {
-        return repository.checkMovieFavorite(id)
+        return useCase.checkMovieFavorite(id)
     }
 
-    fun addMovieToFavorite(movieEntity: MovieEntity) {
+    fun addMovieToFavorite(movie: Movie) {
         viewModelScope.launch {
-            repository.insertFavoriteMovie(movieEntity.id)
+            useCase.addMovieToFavorite(movie.id)
         }
     }
 
-    fun deleteMovieFromFavorite(movieEntity: MovieEntity) {
+    fun deleteMovieFromFavorite(movie: Movie) {
         viewModelScope.launch {
-            repository.deleteFavoriteMovie(movieEntity.id)
+            useCase.removeMovieFromFavorite(movie.id)
         }
     }
 }

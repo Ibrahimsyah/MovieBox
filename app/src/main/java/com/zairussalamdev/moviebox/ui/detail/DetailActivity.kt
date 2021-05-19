@@ -9,8 +9,8 @@ import coil.load
 import com.zairussalamdev.moviebox.R
 import com.zairussalamdev.moviebox.core.configs.Constants
 import com.zairussalamdev.moviebox.core.data.Resource
-import com.zairussalamdev.moviebox.core.data.source.local.entities.DetailEntity
-import com.zairussalamdev.moviebox.core.data.source.local.entities.MovieEntity
+import com.zairussalamdev.moviebox.core.domain.model.Detail
+import com.zairussalamdev.moviebox.core.domain.model.Movie
 import com.zairussalamdev.moviebox.core.utils.ImageNetwork
 import com.zairussalamdev.moviebox.databinding.ActivityDetailBinding
 import com.zairussalamdev.moviebox.ui.adapter.MovieGenreAdapter
@@ -26,7 +26,7 @@ class DetailActivity : AppCompatActivity() {
     private val detailViewModel: DetailViewModel by viewModel()
 
     private lateinit var binding: ActivityDetailBinding
-    private lateinit var detailEntity: DetailEntity
+    private lateinit var detailEntity: Detail
     private lateinit var genreAdapter: MovieGenreAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,20 +55,20 @@ class DetailActivity : AppCompatActivity() {
             else it.getTvShowDetail(movieId)
         }
 
-        data.observe(this, { detail ->
-            when (detail) {
+        data.observe(this, {
+            when (it) {
                 is Resource.Success -> {
                     hideErrorMessage()
                     showLoading(false)
-                    showData(detail.data)
-                    detailEntity = detail.data as DetailEntity
+                    showData(it.data)
+                    detailEntity = it.data as Detail
                 }
                 is Resource.Loading -> {
                     showLoading(true)
                 }
                 is Resource.Error -> {
                     showLoading(false)
-                    showErrorMessage(detail.message as String)
+                    showErrorMessage(it.message as String)
                 }
             }
         })
@@ -91,11 +91,11 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun showData(detail: DetailEntity?) {
+    private fun showData(detail: Detail?) {
         detail?.let {
             val rating = resources.getString(R.string.movie_rating)
             with(binding) {
-                moviePoster.load(ImageNetwork.getFullSizeUrl(it.posterPath as String)) {
+                moviePoster.load(ImageNetwork.getFullSizeUrl(it.posterPath)) {
                     crossfade(true)
                 }
                 movieTitle.text = it.title
@@ -128,16 +128,17 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun showLoading(state: Boolean) {
+        binding.fab.visibility = if (state) View.GONE else View.VISIBLE
         binding.progressBar.visibility = if (state) View.VISIBLE else View.GONE
     }
 
-    private fun mapDetailToMovie(detailEntity: DetailEntity, movieType: Int): MovieEntity {
-        return MovieEntity(
-            detailEntity.id,
-            detailEntity.overview,
-            detailEntity.title,
-            detailEntity.posterPath,
-            detailEntity.voteAverage,
+    private fun mapDetailToMovie(detail: Detail, movieType: Int): Movie {
+        return Movie(
+            detail.id,
+            detail.overview,
+            detail.title,
+            detail.posterPath,
+            detail.voteAverage,
             movieType
         )
     }
