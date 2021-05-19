@@ -41,7 +41,7 @@ class TMDBRepositoryTest {
     @Test
     fun `get movie list success`() {
         testCoroutineRule.runBlockingTest {
-            val data = DummyData.getDummyListData()
+            val data = DummyData.getDummyListEntityData()
             val expected = MutableLiveData<List<MovieEntity>>()
             expected.value = data
             `when`(localDataSource.getMovies()).thenReturn(expected)
@@ -54,7 +54,7 @@ class TMDBRepositoryTest {
     @Test
     fun `get tv show list success`() {
         testCoroutineRule.runBlockingTest {
-            val data = DummyData.getDummyListData()
+            val data = DummyData.getDummyListEntityData()
             val expected = MutableLiveData<List<MovieEntity>>()
             expected.value = data
             `when`(localDataSource.getTvShows()).thenReturn(expected)
@@ -68,7 +68,7 @@ class TMDBRepositoryTest {
     fun `get movie detail success`() {
         testCoroutineRule.runBlockingTest {
             val id = 1
-            val response = DummyData.getDummyDetailData()
+            val response = DummyData.getDummyDetailEntityData()
             val expectation = MutableLiveData<DetailEntity>()
             expectation.value = response
             `when`(localDataSource.getMovieDetail(id)).thenReturn(expectation)
@@ -84,7 +84,7 @@ class TMDBRepositoryTest {
     fun `get tv show detail success`() {
         testCoroutineRule.runBlockingTest {
             val id = 1
-            val response = DummyData.getDummyDetailData()
+            val response = DummyData.getDummyDetailEntityData()
             val expectation = MutableLiveData<DetailEntity>()
             expectation.value = response
             `when`(localDataSource.getTvShowDetail(id)).thenReturn(expectation)
@@ -98,7 +98,7 @@ class TMDBRepositoryTest {
 
     @Test
     fun `get favorite movies list`() {
-        val data = DummyData.getDummyListData()
+        val data = DummyData.getDummyListEntityData()
         val expected = MutableLiveData<List<MovieEntity>>()
         expected.value = data
         `when`(localDataSource.getFavoriteMovies()).thenReturn(expected)
@@ -109,7 +109,7 @@ class TMDBRepositoryTest {
 
     @Test
     fun `get favorite tv shows list`() {
-        val data = DummyData.getDummyListData()
+        val data = DummyData.getDummyListEntityData()
         val expected = MutableLiveData<List<MovieEntity>>()
         expected.value = data
         `when`(localDataSource.getFavoriteTvShows()).thenReturn(expected)
