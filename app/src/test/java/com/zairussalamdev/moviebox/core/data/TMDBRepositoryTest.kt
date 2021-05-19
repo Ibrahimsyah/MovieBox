@@ -2,7 +2,6 @@ package com.zairussalamdev.moviebox.core.data
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
-import androidx.paging.DataSource
 import com.nhaarman.mockitokotlin2.verify
 import com.zairussalamdev.moviebox.core.data.source.local.LocalDataSource
 import com.zairussalamdev.moviebox.core.data.source.local.entities.DetailEntity
@@ -10,7 +9,6 @@ import com.zairussalamdev.moviebox.core.data.source.local.entities.MovieEntity
 import com.zairussalamdev.moviebox.core.data.source.remote.RemoteDataSource
 import com.zairussalamdev.moviebox.core.utils.DummyData
 import com.zairussalamdev.moviebox.core.utils.LiveDataTestUtil
-import com.zairussalamdev.moviebox.core.utils.PagedListUtil
 import com.zairussalamdev.moviebox.core.utils.TestCoroutineRule
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotNull
@@ -44,14 +42,12 @@ class TMDBRepositoryTest {
     fun `get movie list success`() {
         testCoroutineRule.runBlockingTest {
             val data = DummyData.getDummyListData()
-            val dataSourceFactory =
-                mock(DataSource.Factory::class.java) as DataSource.Factory<Int, MovieEntity>
-            `when`(localDataSource.getMovies()).thenReturn(dataSourceFactory)
+            val expected = MutableLiveData<List<MovieEntity>>()
+            expected.value = data
+            `when`(localDataSource.getMovies()).thenReturn(expected)
             tmdbRepository.getMovieList()
 
-            val result = Resource.success(PagedListUtil.mockPagedList(data))
             verify(localDataSource).getMovies()
-            assertNotNull(result.data)
         }
     }
 
@@ -59,14 +55,12 @@ class TMDBRepositoryTest {
     fun `get tv show list success`() {
         testCoroutineRule.runBlockingTest {
             val data = DummyData.getDummyListData()
-            val dataSourceFactory =
-                mock(DataSource.Factory::class.java) as DataSource.Factory<Int, MovieEntity>
-            `when`(localDataSource.getTvShows()).thenReturn(dataSourceFactory)
+            val expected = MutableLiveData<List<MovieEntity>>()
+            expected.value = data
+            `when`(localDataSource.getTvShows()).thenReturn(expected)
             tmdbRepository.getTvShowsList()
 
-            val result = Resource.success(PagedListUtil.mockPagedList(data))
             verify(localDataSource).getTvShows()
-            assertNotNull(result.data)
         }
     }
 
@@ -104,30 +98,24 @@ class TMDBRepositoryTest {
 
     @Test
     fun `get favorite movies list`() {
-        val response = DummyData.getDummyListData()
-        val dataSourceFactory = mock(DataSource.Factory::class.java) as DataSource.Factory<Int, MovieEntity>
-        `when`(localDataSource.getFavoriteMovies()).thenReturn(dataSourceFactory)
+        val data = DummyData.getDummyListData()
+        val expected = MutableLiveData<List<MovieEntity>>()
+        expected.value = data
+        `when`(localDataSource.getFavoriteMovies()).thenReturn(expected)
         tmdbRepository.getFavoriteMovies()
 
-        val result = PagedListUtil.mockPagedList(response)
         verify(localDataSource).getFavoriteMovies()
-
-        assertNotNull(result)
-        assertEquals(response.size, result.size)
     }
 
     @Test
     fun `get favorite tv shows list`() {
-        val response = DummyData.getDummyListData()
-        val dataSourceFactory = mock(DataSource.Factory::class.java) as DataSource.Factory<Int, MovieEntity>
-        `when`(localDataSource.getFavoriteTvShows()).thenReturn(dataSourceFactory)
+        val data = DummyData.getDummyListData()
+        val expected = MutableLiveData<List<MovieEntity>>()
+        expected.value = data
+        `when`(localDataSource.getFavoriteTvShows()).thenReturn(expected)
 
         tmdbRepository.getFavoriteTvShows()
-        val result = PagedListUtil.mockPagedList(response)
         verify(localDataSource).getFavoriteTvShows()
-
-        assertNotNull(result)
-        assertEquals(response.size, result.size)
     }
 
     @Test

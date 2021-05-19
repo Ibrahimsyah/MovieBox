@@ -5,20 +5,20 @@ import androidx.lifecycle.MutableLiveData
 import com.zairussalamdev.moviebox.core.data.source.remote.network.ApiResponse
 import com.zairussalamdev.moviebox.core.data.source.remote.network.TMDBService
 import com.zairussalamdev.moviebox.core.data.source.remote.responses.DetailResponse
-import com.zairussalamdev.moviebox.core.data.source.remote.responses.MovieResponse
-import com.zairussalamdev.moviebox.core.data.source.remote.responses.TvShowResponse
+import com.zairussalamdev.moviebox.core.data.source.remote.responses.ListMovieResponse
+import com.zairussalamdev.moviebox.core.data.source.remote.responses.ListTvShowResponse
 import com.zairussalamdev.moviebox.core.utils.ErrorMessageHandler
 import com.zairussalamdev.moviebox.core.utils.IdlingResource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class RemoteDataSource constructor(private val tmdbService: TMDBService) {
-    suspend fun getMovieList(): LiveData<ApiResponse<MovieResponse>> {
+    suspend fun getMovieList(): LiveData<ApiResponse<ListMovieResponse>> {
         IdlingResource.increment()
-        val result = MutableLiveData<ApiResponse<MovieResponse>>()
+        val result = MutableLiveData<ApiResponse<ListMovieResponse>>()
         try {
             val data = withContext(Dispatchers.IO) { tmdbService.getNowPlayingMovies() }
-            if (data.movies.isEmpty()) {
+            if (data.movieResponses.isEmpty()) {
                 result.postValue(ApiResponse.Empty)
             } else {
                 result.postValue(ApiResponse.Success(data))
@@ -30,12 +30,12 @@ class RemoteDataSource constructor(private val tmdbService: TMDBService) {
         return result
     }
 
-    suspend fun getTvShowList(): LiveData<ApiResponse<TvShowResponse>> {
+    suspend fun getTvShowList(): LiveData<ApiResponse<ListTvShowResponse>> {
         IdlingResource.increment()
-        val result = MutableLiveData<ApiResponse<TvShowResponse>>()
+        val result = MutableLiveData<ApiResponse<ListTvShowResponse>>()
         try {
             val data = withContext(Dispatchers.IO) { tmdbService.getPopularTvShows() }
-            if (data.tvShows.isEmpty()) {
+            if (data.tvShowResponses.isEmpty()) {
                 result.postValue(ApiResponse.Empty)
             } else {
                 result.postValue(ApiResponse.Success(data))

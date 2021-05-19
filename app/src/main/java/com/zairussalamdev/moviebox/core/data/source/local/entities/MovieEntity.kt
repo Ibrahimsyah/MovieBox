@@ -8,10 +8,10 @@ import com.zairussalamdev.moviebox.core.configs.Constants
 data class MovieEntity(
     @PrimaryKey
     val id: Int,
-    val overview: String?,
-    val title: String?,
-    val posterPath: String?,
-    val voteAverage: Double?,
+    val overview: String,
+    val title: String,
+    val posterPath: String,
+    val voteAverage: Double,
     val movieType: Int = Constants.TYPE_MOVIE,
-    val isFavorite: Boolean? = false
+    val isFavorite: Boolean = false
 )
