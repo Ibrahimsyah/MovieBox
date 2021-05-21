@@ -14,18 +14,30 @@ abstract class NetworkBoundResource<ResultType, RequestType> {
             when (val response = networkCall().first()) {
                 is ApiResponse.Success -> {
                     saveCallResult(response.data)
-                    emitAll(populateDataFromDb().map { Resource.Success(it) })
+                    emitAll(populateDataFromDb().map {
+                        Resource.Success(
+                            it
+                        )
+                    })
                 }
 
                 is ApiResponse.Empty -> {
-                    emitAll(populateDataFromDb().map { Resource.Success(it) })
+                    emitAll(populateDataFromDb().map {
+                        Resource.Success(
+                            it
+                        )
+                    })
                 }
                 is ApiResponse.Error -> {
                     emit(Resource.Error<ResultType>(response.errorMessage))
                 }
             }
         } else {
-            emitAll(populateDataFromDb().map { Resource.Success(it) })
+            emitAll(populateDataFromDb().map {
+                Resource.Success(
+                    it
+                )
+            })
         }
     }
 

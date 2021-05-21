@@ -1,6 +1,6 @@
 package com.zairussalamdev.moviebox.core.data.source.remote.network
 
-import com.zairussalamdev.moviebox.BuildConfig
+import com.zairussalamdev.moviebox.core.BuildConfig
 import com.zairussalamdev.moviebox.core.data.source.remote.responses.DetailResponse
 import com.zairussalamdev.moviebox.core.data.source.remote.responses.ListMovieResponse
 import com.zairussalamdev.moviebox.core.data.source.remote.responses.ListTvShowResponse

@@ -66,6 +66,7 @@ object Mapper {
             entity.homepage,
             entity.status,
             entity.popularity,
+
         )
     }
 

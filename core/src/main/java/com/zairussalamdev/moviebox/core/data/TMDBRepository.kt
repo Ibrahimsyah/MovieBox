@@ -20,7 +20,7 @@ class TMDBRepository constructor(
     private val localDataSource: LocalDataSource,
 ) : ITMDBRepository {
     override fun getMovieList(): Flow<Resource<List<Movie>>> {
-        return object : NetworkBoundResource<List<Movie>, ListMovieResponse>() {
+        return object : com.zairussalamdev.moviebox.core.data.NetworkBoundResource<List<Movie>, ListMovieResponse>() {
             override fun populateDataFromDb(): Flow<List<Movie>> {
                 return localDataSource.getMovies().map { Mapper.movieEntitiesToDomain(it) }
             }
@@ -39,7 +39,7 @@ class TMDBRepository constructor(
     }
 
     override fun getTvShowsList(): Flow<Resource<List<Movie>>> {
-        return object : NetworkBoundResource<List<Movie>, ListTvShowResponse>() {
+        return object : com.zairussalamdev.moviebox.core.data.NetworkBoundResource<List<Movie>, ListTvShowResponse>() {
             override fun populateDataFromDb(): Flow<List<Movie>> {
                 return localDataSource.getTvShows().map {
                     Mapper.movieEntitiesToDomain(it)
@@ -60,7 +60,7 @@ class TMDBRepository constructor(
     }
 
     override fun getMovieDetail(id: Int): Flow<Resource<Detail>> {
-        return object : NetworkBoundResource<Detail, DetailResponse>() {
+        return object : com.zairussalamdev.moviebox.core.data.NetworkBoundResource<Detail, DetailResponse>() {
             override fun populateDataFromDb(): Flow<Detail> {
                 return localDataSource.getMovieDetail(id).mapNotNull {
                     if (it == null) {
@@ -85,7 +85,7 @@ class TMDBRepository constructor(
     }
 
     override fun getTvShowDetail(id: Int): Flow<Resource<Detail>> {
-        return object : NetworkBoundResource<Detail, DetailResponse>() {
+        return object : com.zairussalamdev.moviebox.core.data.NetworkBoundResource<Detail, DetailResponse>() {
             override fun populateDataFromDb(): Flow<Detail> {
                 return localDataSource.getTvShowDetail(id).map {
                     if (it == null) {
@@ -103,7 +103,7 @@ class TMDBRepository constructor(
             }
 
             override suspend fun saveCallResult(data: DetailResponse) {
-                val detail = Mapper.detailResponseToEntity(data, Constants.TYPE_MOVIE)
+                val detail = Mapper.detailResponseToEntity(data, Constants.TYPE_TV_SHOW)
                 localDataSource.insertDetailMovie(detail)
             }
 
