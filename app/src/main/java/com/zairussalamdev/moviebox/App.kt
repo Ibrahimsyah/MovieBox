@@ -4,7 +4,7 @@ import android.app.Application
 import com.zairussalamdev.moviebox.core.di.appModule
 import com.zairussalamdev.moviebox.core.di.networkModule
 import com.zairussalamdev.moviebox.core.di.storageModule
-import com.zairussalamdev.moviebox.core.di.viewModelModule
+import com.zairussalamdev.moviebox.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin

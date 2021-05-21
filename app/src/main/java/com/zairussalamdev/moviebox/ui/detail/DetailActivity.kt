@@ -37,21 +37,26 @@ class DetailActivity : AppCompatActivity() {
 
         genreAdapter = MovieGenreAdapter()
         val movieId = intent.getIntExtra(MOVIE_ID, 0)
-        val movieType = intent.getIntExtra(MOVIE_TYPE, Constants.TYPE_MOVIE)
+        val movieType = intent.getIntExtra(
+            MOVIE_TYPE,
+            Constants.TYPE_MOVIE
+        )
         var isMovieFavorite = false
 
         with(binding.rvMovieGenre) {
             layoutManager = LinearLayoutManager(
-                    this@DetailActivity,
-                    LinearLayoutManager.HORIZONTAL,
-                    false
+                this@DetailActivity,
+                LinearLayoutManager.HORIZONTAL,
+                false
             )
             setHasFixedSize(true)
             adapter = genreAdapter
         }
 
         val data = detailViewModel.let {
-            if (movieType == Constants.TYPE_MOVIE) it.getMovieDetail(movieId)
+            if (movieType == Constants.TYPE_MOVIE) it.getMovieDetail(
+                movieId
+            )
             else it.getTvShowDetail(movieId)
         }
 

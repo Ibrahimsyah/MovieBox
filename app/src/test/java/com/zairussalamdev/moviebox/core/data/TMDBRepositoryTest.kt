@@ -35,7 +35,8 @@ class TMDBRepositoryTest {
 
     @Before
     fun init() {
-        tmdbRepository = TMDBRepository(remoteDataSource, localDataSource)
+        tmdbRepository =
+            TMDBRepository(remoteDataSource, localDataSource)
     }
 
     @Test

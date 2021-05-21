@@ -1,4 +1,4 @@
-package com.zairussalamdev.moviebox.core.di
+package com.zairussalamdev.moviebox.di
 
 import com.zairussalamdev.moviebox.ui.detail.DetailViewModel
 import com.zairussalamdev.moviebox.ui.favoritemovies.FavoriteMoviesViewModel
