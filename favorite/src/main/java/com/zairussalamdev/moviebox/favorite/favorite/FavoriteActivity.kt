@@ -1,13 +1,17 @@
-package com.zairussalamdev.moviebox.ui.favorite
+package com.zairussalamdev.moviebox.favorite.favorite
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.tabs.TabLayoutMediator
-import com.zairussalamdev.moviebox.databinding.ActivityFavoriteBinding
-import com.zairussalamdev.moviebox.ui.adapter.FavoriteViewPagerAdapter
-import com.zairussalamdev.moviebox.ui.main.MainActivity
+import com.zairussalamdev.moviebox.favorite.databinding.ActivityFavoriteBinding
+import com.zairussalamdev.moviebox.favorite.di.favoriteModule
+import org.koin.core.context.loadKoinModules
 
 class FavoriteActivity : AppCompatActivity() {
+
+    companion object {
+        val TAB_TITLES = arrayOf("Movies", "TV Shows")
+    }
 
     private lateinit var binding: ActivityFavoriteBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -15,11 +19,13 @@ class FavoriteActivity : AppCompatActivity() {
         binding = ActivityFavoriteBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        loadKoinModules(favoriteModule)
+
         with(binding) {
             val adapter = FavoriteViewPagerAdapter(this@FavoriteActivity)
             viewPager.adapter = adapter
             TabLayoutMediator(tabs, viewPager) { tab, position ->
-                tab.text = MainActivity.TAB_TITLES[position]
+                tab.text = TAB_TITLES[position]
             }.attach()
         }
     }

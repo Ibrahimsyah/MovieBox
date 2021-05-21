@@ -1,4 +1,4 @@
-package com.zairussalamdev.moviebox.ui.favoritemovies
+package com.zairussalamdev.moviebox.favorite.favoritemovies
 
 import android.content.Intent
 import android.os.Bundle

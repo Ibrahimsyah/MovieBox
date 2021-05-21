@@ -1,6 +1,7 @@
 package com.zairussalamdev.moviebox.ui.main
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -9,7 +10,6 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.zairussalamdev.moviebox.R
 import com.zairussalamdev.moviebox.databinding.ActivityMainBinding
 import com.zairussalamdev.moviebox.ui.adapter.MainViewPagerAdapter
-import com.zairussalamdev.moviebox.ui.favorite.FavoriteActivity
 
 class MainActivity : AppCompatActivity() {
     companion object {
@@ -42,8 +42,8 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_favorite -> {
-                val intent = Intent(this, FavoriteActivity::class.java)
-                startActivity(intent)
+                val uri = Uri.parse("moviebox://favorite")
+                startActivity(Intent(Intent.ACTION_VIEW, uri))
             }
         }
         return super.onOptionsItemSelected(item)

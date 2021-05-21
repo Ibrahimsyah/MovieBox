@@ -15,17 +15,13 @@ abstract class NetworkBoundResource<ResultType, RequestType> {
                 is ApiResponse.Success -> {
                     saveCallResult(response.data)
                     emitAll(populateDataFromDb().map {
-                        Resource.Success(
-                            it
-                        )
+                        Resource.Success(it)
                     })
                 }
 
                 is ApiResponse.Empty -> {
                     emitAll(populateDataFromDb().map {
-                        Resource.Success(
-                            it
-                        )
+                        Resource.Success(it)
                     })
                 }
                 is ApiResponse.Error -> {

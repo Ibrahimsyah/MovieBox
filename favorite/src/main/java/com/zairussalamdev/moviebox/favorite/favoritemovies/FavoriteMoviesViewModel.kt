@@ -1,4 +1,4 @@
-package com.zairussalamdev.moviebox.ui.favoritemovies
+package com.zairussalamdev.moviebox.favorite.favoritemovies
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
