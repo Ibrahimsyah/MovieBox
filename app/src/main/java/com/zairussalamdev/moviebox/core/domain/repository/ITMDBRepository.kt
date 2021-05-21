@@ -1,24 +1,24 @@
 package com.zairussalamdev.moviebox.core.domain.repository
 
-import androidx.lifecycle.LiveData
 import com.zairussalamdev.moviebox.core.data.Resource
 import com.zairussalamdev.moviebox.core.domain.model.Detail
 import com.zairussalamdev.moviebox.core.domain.model.Movie
+import kotlinx.coroutines.flow.Flow
 
 interface ITMDBRepository {
-    fun getMovieList(): LiveData<Resource<List<Movie>>>
+    fun getMovieList(): Flow<Resource<List<Movie>>>
 
-    fun getTvShowsList(): LiveData<Resource<List<Movie>>>
+    fun getTvShowsList(): Flow<Resource<List<Movie>>>
 
-    fun getMovieDetail(id: Int): LiveData<Resource<Detail>>
+    fun getMovieDetail(id: Int): Flow<Resource<Detail>>
 
-    fun getTvShowDetail(id: Int): LiveData<Resource<Detail>>
+    fun getTvShowDetail(id: Int): Flow<Resource<Detail>>
 
-    fun getFavoriteMovies(): LiveData<List<Movie>>
+    fun getFavoriteMovies(): Flow<List<Movie>>
 
-    fun getFavoriteTvShows(): LiveData<List<Movie>>
+    fun getFavoriteTvShows(): Flow<List<Movie>>
 
-    fun checkMovieFavorite(id: Int): LiveData<Boolean>
+    fun checkMovieFavorite(id: Int): Flow<Boolean>
 
     suspend fun insertFavoriteMovie(id: Int)
 

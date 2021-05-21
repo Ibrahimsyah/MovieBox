@@ -4,7 +4,7 @@ import androidx.test.espresso.idling.CountingIdlingResource
 
 object IdlingResource {
     private const val RESOURCE: String = "GLOBAL"
-    val espressoTestIdlingResource = CountingIdlingResource(RESOURCE)
+    private val espressoTestIdlingResource = CountingIdlingResource(RESOURCE)
 
     fun increment() {
         espressoTestIdlingResource.increment()

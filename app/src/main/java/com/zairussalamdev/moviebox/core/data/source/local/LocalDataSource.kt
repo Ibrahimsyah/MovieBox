@@ -1,10 +1,10 @@
 package com.zairussalamdev.moviebox.core.data.source.local
 
-import androidx.lifecycle.LiveData
 import com.zairussalamdev.moviebox.core.data.source.local.database.MovieDao
 import com.zairussalamdev.moviebox.core.data.source.local.entities.DetailEntity
 import com.zairussalamdev.moviebox.core.data.source.local.entities.MovieEntity
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
 class LocalDataSource constructor(private val movieDao: MovieDao) {
@@ -16,31 +16,31 @@ class LocalDataSource constructor(private val movieDao: MovieDao) {
         withContext(Dispatchers.IO) { movieDao.insertDetail(movieDetail) }
     }
 
-    fun getMovies(): LiveData<List<MovieEntity>> {
+    fun getMovies(): Flow<List<MovieEntity>> {
         return movieDao.getMovies()
     }
 
-    fun getMovieDetail(movieId: Int): LiveData<DetailEntity> {
+    fun getMovieDetail(movieId: Int): Flow<DetailEntity?> {
         return movieDao.getMovieDetail(movieId)
     }
 
-    fun getTvShows(): LiveData<List<MovieEntity>> {
+    fun getTvShows(): Flow<List<MovieEntity>> {
         return movieDao.getTvShows()
     }
 
-    fun getTvShowDetail(tvShowId: Int): LiveData<DetailEntity> {
+    fun getTvShowDetail(tvShowId: Int): Flow<DetailEntity?> {
         return movieDao.getTvShowDetail(tvShowId)
     }
 
-    fun getFavoriteMovies(): LiveData<List<MovieEntity>> {
+    fun getFavoriteMovies(): Flow<List<MovieEntity>> {
         return movieDao.getFavoriteMovies()
     }
 
-    fun getFavoriteTvShows(): LiveData<List<MovieEntity>> {
+    fun getFavoriteTvShows(): Flow<List<MovieEntity>> {
         return movieDao.getFavoriteTvShows()
     }
 
-    fun checkMovieFavorite(id: Int): LiveData<Boolean> {
+    fun checkMovieFavorite(id: Int): Flow<Boolean> {
         return movieDao.checkMovieFavorite(id)
     }
 
