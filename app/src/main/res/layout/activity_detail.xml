@@ -224,7 +224,8 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="ERROR MESSAGE" />
+                tools:text="ERROR MESSAGE"
+                android:gravity="center_horizontal" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
@@ -237,5 +238,6 @@
         android:layout_marginBottom="16dp"
         android:backgroundTint="@color/red"
         android:contentDescription="@string/add_to_favorite"
-        android:src="@drawable/ic_favorite" />
+        android:src="@drawable/ic_favorite"
+        tools:targetApi="lollipop" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

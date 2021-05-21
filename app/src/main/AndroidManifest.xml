@@ -14,7 +14,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MovieBox"
         tools:ignore="AllowBackup">
-        <activity android:name=".ui.favorite.FavoriteActivity" />
         <activity android:name=".ui.detail.DetailActivity" />
         <activity
             android:name=".ui.SplashScreenActivity"

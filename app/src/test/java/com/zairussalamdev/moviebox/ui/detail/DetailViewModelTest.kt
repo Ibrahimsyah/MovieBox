@@ -12,7 +12,6 @@ import com.zairussalamdev.moviebox.core.utils.TestCoroutineRule
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import okhttp3.ResponseBody
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -20,8 +19,6 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
-import retrofit2.HttpException
-import retrofit2.Response
 
 @RunWith(MockitoJUnitRunner::class)
 @ExperimentalCoroutinesApi
@@ -43,7 +40,6 @@ class DetailViewModelTest {
     private lateinit var isFavoriteObserver: Observer<Boolean>
 
     private lateinit var detailViewModel: DetailViewModel
-    private lateinit var responseHttpError: HttpException
 
     private var dummyDetail = DummyData.getDummyDetailData()
     private var dummyEntity = DummyData.getDummyListData()[0]
@@ -51,8 +47,6 @@ class DetailViewModelTest {
     @Before
     fun init() {
         detailViewModel = DetailViewModel(movieInteractor)
-        val responseBody = Response.error<Error>(500, ResponseBody.create(null, "".toByteArray()))
-        responseHttpError = HttpException(responseBody)
     }
 
     @Test

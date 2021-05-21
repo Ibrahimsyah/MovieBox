@@ -29,11 +29,14 @@ class FavoriteMoviesViewModelTest {
     @Mock
     private lateinit var errorObserver: Observer<String>
 
-    private lateinit var favoriteViewModel: FavoriteMoviesViewModel
+    private lateinit var favoriteViewModel: com.zairussalamdev.moviebox.favorite.favoritemovies.FavoriteMoviesViewModel
 
     @Before
     fun init() {
-        favoriteViewModel = FavoriteMoviesViewModel(movieInteractor)
+        favoriteViewModel =
+            com.zairussalamdev.moviebox.favorite.favoritemovies.FavoriteMoviesViewModel(
+                movieInteractor
+            )
     }
 
     @Test
