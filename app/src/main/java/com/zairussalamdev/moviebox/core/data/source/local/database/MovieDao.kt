@@ -1,6 +1,5 @@
 package com.zairussalamdev.moviebox.core.data.source.local.database
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -8,26 +7,27 @@ import androidx.room.Query
 import com.zairussalamdev.moviebox.core.configs.Constants
 import com.zairussalamdev.moviebox.core.data.source.local.entities.DetailEntity
 import com.zairussalamdev.moviebox.core.data.source.local.entities.MovieEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MovieDao {
     @Query("select * from movies where movieType = ${Constants.TYPE_MOVIE}")
-    fun getMovies(): LiveData<List<MovieEntity>>
+    fun getMovies(): Flow<List<MovieEntity>>
 
     @Query("select * from movies where movieType = ${Constants.TYPE_TV_SHOW}")
-    fun getTvShows(): LiveData<List<MovieEntity>>
+    fun getTvShows(): Flow<List<MovieEntity>>
 
     @Query("select * from details where movie_id = :movieId and movieType = ${Constants.TYPE_MOVIE}")
-    fun getMovieDetail(movieId: Int): LiveData<DetailEntity>
+    fun getMovieDetail(movieId: Int): Flow<DetailEntity?>
 
     @Query("select * from details where movie_id = :tvShowId and movieType = ${Constants.TYPE_TV_SHOW}")
-    fun getTvShowDetail(tvShowId: Int): LiveData<DetailEntity>
+    fun getTvShowDetail(tvShowId: Int): Flow<DetailEntity?>
 
     @Query("select * from movies where movieType = ${Constants.TYPE_MOVIE} and isFavorite = 1")
-    fun getFavoriteMovies(): LiveData<List<MovieEntity>>
+    fun getFavoriteMovies(): Flow<List<MovieEntity>>
 
     @Query("select * from movies where movieType = ${Constants.TYPE_TV_SHOW} and isFavorite = 1")
-    fun getFavoriteTvShows(): LiveData<List<MovieEntity>>
+    fun getFavoriteTvShows(): Flow<List<MovieEntity>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertMovie(movies: List<MovieEntity>)
@@ -42,5 +42,5 @@ interface MovieDao {
     fun removeFavorite(id: Int)
 
     @Query("select isFavorite == 1 from movies where id = :id")
-    fun checkMovieFavorite(id: Int): LiveData<Boolean>
+    fun checkMovieFavorite(id: Int): Flow<Boolean>
 }

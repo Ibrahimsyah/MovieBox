@@ -53,8 +53,7 @@ object Mapper {
         }
     }
 
-    fun detailEntityToDomain(entity: DetailEntity?): Detail? {
-        if (entity == null) return null
+    fun detailEntityToDomain(entity: DetailEntity): Detail {
         val genres = entity.genres.map { Genre(it) }
         return Detail(
             entity.overview,
