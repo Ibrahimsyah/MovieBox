@@ -1,12 +1,12 @@
 package com.zairussalamdev.moviebox.core.data
 
 import com.zairussalamdev.moviebox.core.configs.Constants
-import com.zairussalamdev.moviebox.core.data.source.local.LocalDataSource
-import com.zairussalamdev.moviebox.core.data.source.remote.RemoteDataSource
-import com.zairussalamdev.moviebox.core.data.source.remote.network.ApiResponse
-import com.zairussalamdev.moviebox.core.data.source.remote.responses.DetailResponse
-import com.zairussalamdev.moviebox.core.data.source.remote.responses.ListMovieResponse
-import com.zairussalamdev.moviebox.core.data.source.remote.responses.ListTvShowResponse
+import  com.zairussalamdev.moviebox.core.data.source.local.LocalDataSource
+import  com.zairussalamdev.moviebox.core.data.source.remote.RemoteDataSource
+import  com.zairussalamdev.moviebox.core.data.source.remote.network.ApiResponse
+import  com.zairussalamdev.moviebox.core.data.source.remote.responses.DetailResponse
+import  com.zairussalamdev.moviebox.core.data.source.remote.responses.ListMovieResponse
+import  com.zairussalamdev.moviebox.core.data.source.remote.responses.ListTvShowResponse
 import com.zairussalamdev.moviebox.core.domain.model.Detail
 import com.zairussalamdev.moviebox.core.domain.model.Movie
 import com.zairussalamdev.moviebox.core.domain.repository.ITMDBRepository
@@ -20,7 +20,7 @@ class TMDBRepository constructor(
     private val localDataSource: LocalDataSource,
 ) : ITMDBRepository {
     override fun getMovieList(): Flow<Resource<List<Movie>>> {
-        return object : com.zairussalamdev.moviebox.core.data.NetworkBoundResource<List<Movie>, ListMovieResponse>() {
+        return object : NetworkBoundResource<List<Movie>, ListMovieResponse>() {
             override fun populateDataFromDb(): Flow<List<Movie>> {
                 return localDataSource.getMovies().map { Mapper.movieEntitiesToDomain(it) }
             }
@@ -39,7 +39,7 @@ class TMDBRepository constructor(
     }
 
     override fun getTvShowsList(): Flow<Resource<List<Movie>>> {
-        return object : com.zairussalamdev.moviebox.core.data.NetworkBoundResource<List<Movie>, ListTvShowResponse>() {
+        return object :NetworkBoundResource<List<Movie>, ListTvShowResponse>() {
             override fun populateDataFromDb(): Flow<List<Movie>> {
                 return localDataSource.getTvShows().map {
                     Mapper.movieEntitiesToDomain(it)
@@ -60,7 +60,7 @@ class TMDBRepository constructor(
     }
 
     override fun getMovieDetail(id: Int): Flow<Resource<Detail>> {
-        return object : com.zairussalamdev.moviebox.core.data.NetworkBoundResource<Detail, DetailResponse>() {
+        return object :NetworkBoundResource<Detail, DetailResponse>() {
             override fun populateDataFromDb(): Flow<Detail> {
                 return localDataSource.getMovieDetail(id).mapNotNull {
                     if (it == null) {
@@ -85,7 +85,7 @@ class TMDBRepository constructor(
     }
 
     override fun getTvShowDetail(id: Int): Flow<Resource<Detail>> {
-        return object : com.zairussalamdev.moviebox.core.data.NetworkBoundResource<Detail, DetailResponse>() {
+        return object :NetworkBoundResource<Detail, DetailResponse>() {
             override fun populateDataFromDb(): Flow<Detail> {
                 return localDataSource.getTvShowDetail(id).map {
                     if (it == null) {
