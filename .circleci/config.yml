@@ -20,7 +20,7 @@ jobs:
       - run:
           name: Download Dependencies
           command: ./gradlew androidDependencies
-      - remove_cache:
+      - run:
           name: Removing old cache
           command: rm -rf ~/.gradle
       - run:
