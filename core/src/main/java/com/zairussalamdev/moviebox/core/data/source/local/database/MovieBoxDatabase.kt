@@ -7,7 +7,7 @@ import com.zairussalamdev.moviebox.core.data.source.local.entities.DetailEntity
 import com.zairussalamdev.moviebox.core.data.source.local.entities.GenreConverter
 import com.zairussalamdev.moviebox.core.data.source.local.entities.MovieEntity
 
-@Database(entities = [MovieEntity::class, DetailEntity::class], version = 1)
+@Database(entities = [MovieEntity::class, DetailEntity::class], version = 1, exportSchema = false)
 @TypeConverters(GenreConverter::class)
 abstract class MovieBoxDatabase : RoomDatabase() {
     abstract fun movieDao(): MovieDao
