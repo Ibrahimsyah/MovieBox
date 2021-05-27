@@ -4,6 +4,8 @@ version: 2.1
 orbs:
   android: circleci/android@0.2.1
 
+GRADLE_OPTS: -Xmx1536m -XX:+HeapDumpOnOutOfMemoryError -Dorg.gradle.caching=true -Dorg.gradle.configureondemand=true -Dkotlin.compiler.execution.strategy=in-process -Dkotlin.incremental=false
+
 jobs:
   # Below is the definition of your job to build and test your app, you can rename and customize it as you want.
   build:  
@@ -14,19 +16,15 @@ jobs:
     steps:
       # Checkout the code as the first step.
       - checkout
-      - restore_cache:
-          key: android-orb-v1-
       - run:
           name: Chmod permissions
           command: sudo chmod +x ./gradlew
       - run:
           name: Download Dependencies
           command: ./gradlew androidDependencies
-      - save_cache:
-          key: 'android-orb-v1-{{ epoch }}'
-          paths:
-            - ~/.android/build-cache
-            - ~/.android/cache
+      - run:
+          name: Removing old cache
+          command: rm -rf ~/.gradle
       - run:
           name: Run Build
           command: ./gradlew build
