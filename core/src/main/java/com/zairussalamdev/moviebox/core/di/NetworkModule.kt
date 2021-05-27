@@ -12,9 +12,8 @@ import java.util.concurrent.TimeUnit
 
 val networkModule = module {
     single {
-        val hostName = Constants.BASE_URL
         val certificatePinner = CertificatePinner.Builder()
-            .add(hostName, Constants.BASE_URL_SHA256_KEY)
+            .add(Constants.HOSTNAME, Constants.HOSTNAME_SHA256_KEY)
             .build()
         OkHttpClient.Builder()
             .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
@@ -27,6 +26,7 @@ val networkModule = module {
         Retrofit.Builder()
             .baseUrl(Constants.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
+            .client(get())
             .build()
     }
 
