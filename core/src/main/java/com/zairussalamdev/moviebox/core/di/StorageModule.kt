@@ -11,7 +11,7 @@ import org.koin.dsl.module
 
 val storageModule = module {
     single {
-        val passphrase: ByteArray = SQLiteDatabase.getBytes("dicoding".toCharArray())
+        val passphrase: ByteArray = SQLiteDatabase.getBytes(Constants.DB_PASSPHRASE.toCharArray())
         val factory = SupportFactory(passphrase)
         Room.databaseBuilder(androidContext(), MovieBoxDatabase::class.java, Constants.DB_NAME)
             .addTypeConverter(GenreConverter())
