@@ -10,7 +10,6 @@ data class DetailEntity(
     @PrimaryKey
     @ColumnInfo(name = "movie_id")
     val id: Int,
-
     val overview: String,
     val title: String,
     val posterPath: String,
