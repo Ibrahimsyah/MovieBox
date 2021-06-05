@@ -13,9 +13,7 @@ class DetailViewModel constructor(private val useCase: MovieUseCase) : ViewModel
 
     fun getTvShowDetail(id: Int) = useCase.getTvShowDetail(id)
 
-    fun checkIsMovieFavorite(id: Int): LiveData<Boolean> {
-        return useCase.checkMovieFavorite(id)
-    }
+    fun checkIsMovieFavorite(id: Int) = useCase.checkMovieFavorite(id)
 
     fun addMovieToFavorite(movie: Movie) {
         viewModelScope.launch {
